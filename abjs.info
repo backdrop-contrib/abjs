@@ -1,0 +1,8 @@
+name = A/B Test JavaScript Framework
+description = "A/B Testing Platform using JavaScript"
+core = 7.x
+configure = admin/config/abjs
+
+version = "7.x-1.0"
+core = "7.x"
+package = "box.com"
