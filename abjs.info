@@ -1,5 +1,5 @@
-name = A/B Test JavaScript Framework
-description = "A/B Testing Platform using JavaScript"
+name = A/B Testing via JavaScript
+description = "A/B Testing via JavaScript"
 core = 7.x
 configure = admin/config/abjs
 

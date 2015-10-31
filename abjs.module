@@ -11,8 +11,10 @@
 function abjs_help($path, $arg) {
   switch ($path) {
     case 'admin/help#abjs':
-      $output = '<h2>' . t('More to come') . '</h2>';
-      $output .= '<p>' . t("Stay tuned.") . '<p>';
+      $output = <<<EOD
+<h2>Documentation</h2>
+<p>See <a href="https://www.drupal.org/sandbox/mmowers/2601142">Drupal Documentation</a></p>
+EOD;
       return $output;
   }
 }
@@ -369,4 +371,3 @@ EOD;
 
   return $abjs_script;
 }
-

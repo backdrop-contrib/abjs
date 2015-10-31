@@ -148,7 +148,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     // Set up the wrapper so that AJAX will be able to replace the fieldset.
     '#prefix' => '<div id="conditions-fieldset-wrapper">',
     '#suffix' => '</div>',
-    '#description' => t('Select Conditions for which the test will apply.'),
+    '#description' => t('Select Conditions for which the test will apply. All conditions must must be satisfied for the test to apply'),
   );
 
   $existing_conditions_count = 0;
@@ -229,7 +229,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     // Set up the wrapper so that AJAX will be able to replace the fieldset.
     '#prefix' => '<div id="experiences-fieldset-wrapper">',
     '#suffix' => '</div>',
-    '#description' => t('Select one or more Experiences for the test, and assign fractions to each Experience (e.g. 1/2, 1/3, 0, 1, 0.5, .95, etc...)'),
+    '#description' => t('Select one or more Experiences for the test, and assign fractions to each Experience (e.g. 1/2, 1/3, 0, 1, 0.5, .95, etc...). You cannot use the same Experience ID twice in the same test, so you must duplicate an Experience to use it twice.'),
   );
   $existing_experiences_count = 0;
   if (empty($form_state['num_experiences'])) {
