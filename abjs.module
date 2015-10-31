@@ -243,7 +243,7 @@ function abjs_generate_js($tests) {
   for ($i = 0; $i < count($tests); $i++) {
     //Set name of this test to the tid
     $abjs_script .= "abTests[$i] = {};\n" .
-                    "abTests[$i].name = '{$tests[$i]->tid}';\n" .
+                    "abTests[$i].name = 't_{$tests[$i]->tid}';\n" .
                     "abTests[$i].conditions = [];\n" .
                     "abTests[$i].experiences = [];\n";
     
@@ -262,7 +262,7 @@ function abjs_generate_js($tests) {
     for ($j = 0; $j < count($experiences); $j++) {
       $exp_func_name = "exp_{$experiences[$j]->tid}_{$experiences[$j]->eid}";
       $abjs_script .= "abTests[$i].experiences[$j] = {};\n" .
-                      "abTests[$i].experiences[$j].name = '{$experiences[$j]->eid}';\n" .
+                      "abTests[$i].experiences[$j].name = 'e_{$experiences[$j]->eid}';\n" .
                       "abTests[$i].experiences[$j].fraction = {$experiences[$j]->fraction};\n" .
                       "abTests[$i].experiences[$j].script = '$exp_func_name';\n" .
                       "abExperiences.$exp_func_name = function(){{$experiences[$j]->script}\n};\n";

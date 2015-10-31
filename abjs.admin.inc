@@ -249,14 +249,14 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     $existing_experience = $existing_experiences->fetchObject();
     $form['experiences_fieldset']['experiences'][$i] = array(
       '#type' => 'select', 
-      '#title' => t('Experience %i', array('%i' => $i)), 
+      '#title' => t('Experience %i', array('%i' => $i + 1)), 
       '#options' => $options_array,
       '#default_value' => $existing_experience->eid,
       '#required' => TRUE,
     );
     $form['experiences_fieldset']['experience_fractions'][$i] = array(
       '#type' => 'textfield', 
-      '#title' => t('Experience %i Fraction', array('%i' => $i)), 
+      '#title' => t('Experience %i Fraction', array('%i' => $i + 1)), 
       '#default_value' => $existing_experience->fraction, 
       '#size' => 5, 
       '#maxlength' => 10, 
@@ -268,14 +268,14 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   for ($i = $existing_experiences_count; $i < $form_state['num_experiences']; $i++) {
     $form['experiences_fieldset']['experiences'][$i] = array(
       '#type' => 'select', 
-      '#title' => t('Experience %i', array('%i' => $i)), 
+      '#title' => t('Experience %i', array('%i' => $i +1 )), 
       '#options' => $options_array,
       '#default_value' => 0,
       '#required' => TRUE,
     );
     $form['experiences_fieldset']['experience_fractions'][$i] = array(
       '#type' => 'textfield', 
-      '#title' => t('Experience %i Fraction', array('%i' => $i)), 
+      '#title' => t('Experience %i Fraction', array('%i' => $i + 1)), 
       '#default_value' => '', 
       '#size' => 5, 
       '#maxlength' => 10,
