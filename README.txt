@@ -6,7 +6,6 @@ CONTENTS OF THIS FILE
  * Installation
  * Configuration
  * Troubleshooting
- * FAQ
  * Maintainers
 
 
