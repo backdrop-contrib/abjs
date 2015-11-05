@@ -214,7 +214,6 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   }
 
   //Now do the same for experiences
-
   //Make select list of experiences
   $experiences = db_query("SELECT eid, name FROM {abjs_experience} ORDER BY changed DESC, created DESC");
   $options_array = array(0 => 'Select Experience');
@@ -533,12 +532,7 @@ function abjs_test_delete_confirm_form_submit($form, &$form_state) {
 
 
 //-------------End Tests functions-----------------//
-
-
 //-------------Condition functions-----------------//
-
-
-
 /**
 * Lists all conditions in default table, sorted by modified date
 * For each condition, link to edit form, and list created and edited info
@@ -722,14 +716,8 @@ function abjs_condition_delete_confirm_form_submit($form, &$form_state) {
 }
 
 
-
 //-------------End Condition functions-----------------//
-
-
 //-------------Experience functions-----------------//
-
-
-
 /**
 * Lists all experiences in default table, sorted by modified date
 * For each experience, link to edit form, and list created and edited info
@@ -910,6 +898,4 @@ function abjs_experience_delete_confirm_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/config/abjs/experiences';
 }
-
-
 //-------------End Experience functions-----------------//
