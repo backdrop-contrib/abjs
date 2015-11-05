@@ -298,7 +298,7 @@ function abjs_generate_js($tests) {
       getCookie: function (sKey) {
         if (!sKey) { return null; }
         abKey = cookiePrefix + sKey;
-        return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\\\s*" + encodeURIComponent(abKey).replace(/[\\-\\.\\+\\*]/g, "\\\\$&") + "\\\\s*\\\\=\\\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+        return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\\\s*" + encodeURIComponent(abKey).replace(/[\\-\\.\\+\\*]/g, "\\\\\$&") + "\\\\s*\\\\=\\\\s*([^;]*).*\$)|^.*\$"), "\$1")) || null;
       },
       setCookie: function (sKey, sValue) {
         abKey = cookiePrefix + sKey;
