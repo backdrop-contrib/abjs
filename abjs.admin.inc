@@ -766,7 +766,7 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
   $form['name'] = array(
     '#type' => 'textfield', 
     '#title' => t('Experience Name'), 
-    '#default_value' => $experience->name, 
+    '#default_value' => $experience_name_default, 
     '#size' => 30, 
     '#maxlength' => 50, 
     '#required' => TRUE,
@@ -775,7 +775,7 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
   $form['script'] = array(
     '#type' => 'textarea', 
     '#title' => t('Experience Script'), 
-    '#default_value' => $experience->script,
+    '#default_value' => $experience_script_default,
     '#attributes' => array('placeholder' => array('EXAMPLE: document.write("<style>.sign-up-button { display:none !important; }</style>");')),
     '#description' => t('Any valid javascript to load in head. Leave empty for a Control. Read the documentation for more examples.'),
     '#rows' => 3,
