@@ -191,9 +191,9 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   $form['conditions_fieldset']['add_condition'] = array(
     '#type' => 'submit',
     '#value' => t('Add another condition'),
-    '#submit' => array('ajax_add_condition'),
+    '#submit' => array('abjs_ajax_add_condition'),
     '#ajax' => array(
-      'callback' => 'ajax_conditions_callback',
+      'callback' => 'abjs_ajax_conditions_callback',
       'wrapper' => 'conditions-fieldset-wrapper',
     ),
     '#limit_validation_errors' => array(),
@@ -204,9 +204,9 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     $form['conditions_fieldset']['remove_condition'] = array(
       '#type' => 'submit',
       '#value' => t('Remove last condition'),
-      '#submit' => array('ajax_remove_condition'),
+      '#submit' => array('abjs_ajax_remove_condition'),
       '#ajax' => array(
-        'callback' => 'ajax_conditions_callback',
+        'callback' => 'abjs_ajax_conditions_callback',
         'wrapper' => 'conditions-fieldset-wrapper',
       ),
       '#limit_validation_errors' => array(),
@@ -287,9 +287,9 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   $form['experiences_fieldset']['add_experience'] = array(
     '#type' => 'submit',
     '#value' => t('Add another experience'),
-    '#submit' => array('ajax_add_experience'),
+    '#submit' => array('abjs_ajax_add_experience'),
     '#ajax' => array(
-      'callback' => 'ajax_experiences_callback',
+      'callback' => 'abjs_ajax_experiences_callback',
       'wrapper' => 'experiences-fieldset-wrapper',
     ),
     '#limit_validation_errors' => array(),
@@ -300,9 +300,9 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     $form['experiences_fieldset']['remove_experience'] = array(
       '#type' => 'submit',
       '#value' => t('Remove last experience'),
-      '#submit' => array('ajax_remove_experience'),
+      '#submit' => array('abjs_ajax_remove_experience'),
       '#ajax' => array(
-        'callback' => 'ajax_experiences_callback',
+        'callback' => 'abjs_ajax_experiences_callback',
         'wrapper' => 'experiences-fieldset-wrapper',
       ),
       '#limit_validation_errors' => array(),
@@ -352,7 +352,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
 /**
 * Adds condition select fields to abjs_test_form 
 */
-function ajax_add_condition($form, &$form_state) {
+function abjs_ajax_add_condition($form, &$form_state) {
   $form_state['num_conditions']++;
   $form_state['rebuild'] = TRUE;
 }
@@ -360,14 +360,14 @@ function ajax_add_condition($form, &$form_state) {
 /**
 * Assigns Ajax changes to conditions fieldset in abjs_test_form 
 */
-function ajax_conditions_callback($form, $form_state) {
+function abjs_ajax_conditions_callback($form, $form_state) {
   return $form['conditions_fieldset'];
 }
 
 /**
 * Removes condition select fields to abjs_test_form 
 */
-function ajax_remove_condition($form, &$form_state) {
+function abjs_ajax_remove_condition($form, &$form_state) {
   if ($form_state['num_conditions'] > 1) {
     $form_state['num_conditions']--;
   }
@@ -377,7 +377,7 @@ function ajax_remove_condition($form, &$form_state) {
 /**
 * Adds experience select fields and fractions to abjs_test_form 
 */
-function ajax_add_experience($form, &$form_state) {
+function abjs_ajax_add_experience($form, &$form_state) {
   $form_state['num_experiences']++;
   $form_state['rebuild'] = TRUE;
 }
@@ -385,14 +385,14 @@ function ajax_add_experience($form, &$form_state) {
 /**
 * Assigns Ajax changes to experiences fieldset in abjs_test_form 
 */
-function ajax_experiences_callback($form, $form_state) {
+function abjs_ajax_experiences_callback($form, $form_state) {
   return $form['experiences_fieldset'];
 }
 
 /**
 * Removes experience select fields and fractions to abjs_test_form 
 */
-function ajax_remove_experience($form, &$form_state) {
+function abjs_ajax_remove_experience($form, &$form_state) {
   if ($form_state['num_experiences'] > 1) {
     $form_state['num_experiences']--;
   }

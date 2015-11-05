@@ -279,10 +279,14 @@ function abjs_generate_js($tests) {
   */
   
   //these are the only php variables referenced in the script below
-  $cookie_prefix = !empty(variable_get('abjs_cookie_prefix')) ? variable_get('abjs_cookie_prefix') : 'abjs_';
-  $cookie_lifetime = !empty(variable_get('abjs_cookie_lifetime')) ? variable_get('abjs_cookie_lifetime') : '30';
-  $cookie_domain = !empty(variable_get('abjs_cookie_domain')) ? '"' . variable_get('abjs_cookie_domain') . '"' : 'document.domain';
-  $cookie_secure = !empty(variable_get('abjs_cookie_secure')) ? '; secure' : '';
+  $cookie_prefix_var = variable_get('abjs_cookie_prefix');
+  $cookie_lifetime_var = variable_get('abjs_cookie_lifetime');
+  $cookie_domain_var = variable_get('abjs_cookie_domain');
+  $cookie_secure_var = variable_get('abjs_cookie_secure');
+  $cookie_prefix = !empty($cookie_prefix_var) ? $cookie_prefix_var : 'abjs_';
+  $cookie_lifetime = !empty($cookie_lifetime_var) ? $cookie_lifetime_var : '30';
+  $cookie_domain = !empty($cookie_domain_var) ? '"' . $cookie_domain_var . '"' : 'document.domain';
+  $cookie_secure = !empty($cookie_secure_var) ? '; secure' : '';
 
   $abjs_script .= <<<EOD
     //--------------------Cookie functions-------------------------------------//
