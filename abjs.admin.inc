@@ -15,14 +15,14 @@ function abjs_settings_admin($form, &$form_state) {
     '#type' => 'textfield', 
     '#title' => t('Cookie Prefix'), 
     '#default_value' => variable_get('abjs_cookie_prefix'), 
-    '#description' => 'This string will prefix all A/B test cookie names',
+    '#description' => t('This string will prefix all A/B test cookie names'),
     '#size' => 10, 
     '#maxlength' => 10, 
   );
   $form['abjs_cookie_lifetime'] = array(
     '#type' => 'textfield', 
     '#title' => t('Cookie Lifetime'), 
-    '#description' => 'Enter cookie lifetime in days',
+    '#description' => t('Enter cookie lifetime in days'),
     '#default_value' => variable_get('abjs_cookie_lifetime'), 
     '#size' => 4, 
     '#maxlength' => 10, 
@@ -30,7 +30,7 @@ function abjs_settings_admin($form, &$form_state) {
   $form['abjs_cookie_domain'] = array(
     '#type' => 'textfield', 
     '#title' => t('Cookie Domain'), 
-    '#description' => 'Leave blank to use current domain',
+    '#description' => t('Leave blank to use current domain'),
     '#default_value' => variable_get('abjs_cookie_domain'), 
     '#size' => 50, 
     '#maxlength' => 100, 
@@ -38,14 +38,14 @@ function abjs_settings_admin($form, &$form_state) {
   $form['abjs_cookie_secure'] = array(
     '#type' => 'select', 
     '#title' => t('Use Secure Cookies?'), 
-    '#description' => 'This sets the secure flag on A/B test cookies',
+    '#description' => t('This sets the secure flag on A/B test cookies'),
     '#options' => array(0 => t('No'), 1 => t('Yes'), ),
     '#default_value' => variable_get('abjs_cookie_secure'), 
   );
   $form['abjs_ace'] = array(
     '#type' => 'select', 
     '#title' => t('Use Ace Code Editor?'), 
-    '#description' => 'Use Ace Code Editor for entering Condition and Experience scripts',
+    '#description' => t('Use Ace Code Editor for entering Condition and Experience scripts'),
     '#options' => array(0 => t('No'), 1 => t('Yes'), ),
     '#default_value' => variable_get('abjs_ace'), 
   );
