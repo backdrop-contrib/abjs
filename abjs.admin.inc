@@ -898,4 +898,3 @@ function abjs_experience_delete_confirm_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/config/abjs/experiences';
 }
-//-------------End Experience functions-----------------//
