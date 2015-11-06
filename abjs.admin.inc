@@ -70,7 +70,7 @@ function abjs_test_admin() {
     'Created',
     'Created By',
     'Changed',
-    'Changed By'
+    'Changed By',
   );
   $rows = array();
   $active_array = array('Inactive', 'Active');
@@ -287,7 +287,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   for ($i = $existing_experiences_count; $i < $form_state['num_experiences']; $i++) {
     $form['experiences_fieldset']['experiences'][$i] = array(
       '#type' => 'select',
-      '#title' => t('Experience %i', array('%i' => $i +1 )),
+      '#title' => t('Experience %i', array('%i' => $i + 1)),
       '#options' => $options_array,
       '#default_value' => 0,
       '#required' => TRUE,
@@ -418,13 +418,11 @@ function abjs_ajax_remove_experience($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
 }
 
-
-
 /**
  * Save function for new and edited tests. Check for new vs edit by using tid.
  */
 function abjs_test_form_save_submit($form, &$form_state) {
-  global $user; 
+  global $user;
   if (!empty($form_state['values']['tid'])) {
     // This is an existing test, so update instead of insert.
     $tid = $form_state['values']['tid'];
@@ -444,9 +442,9 @@ function abjs_test_form_save_submit($form, &$form_state) {
         ->execute();
     db_delete('abjs_test_experience')
         ->condition('tid', $tid)
-        ->execute();   
+        ->execute();
   }
-  else{
+  else {
     // This is a new test, so insert it.
     $tid = db_insert('abjs_test')
       ->fields(array(
@@ -455,8 +453,8 @@ function abjs_test_form_save_submit($form, &$form_state) {
         'created' => REQUEST_TIME,
         'created_by' => $user->uid,
         'changed' => REQUEST_TIME,
-        'changed_by' => $user->uid,        
-      ))->execute();    
+        'changed_by' => $user->uid,
+      ))->execute();
   }
 
   // Whether new or existing test, insert conditions and experiences for this
@@ -470,11 +468,11 @@ function abjs_test_form_save_submit($form, &$form_state) {
       db_merge('abjs_test_condition')
         ->key(array(
           'tid' => $tid,
-          'cid' => $cid,       
+          'cid' => $cid,
       ))->fields(array(
           'tid' => $tid,
-          'cid' => $cid,       
-      ))->execute();      
+          'cid' => $cid,
+      ))->execute();
     }
   }
   for ($i = 0; $i < count($form_state['values']['experiences_fieldset']['experiences']); $i++) {
@@ -482,16 +480,16 @@ function abjs_test_form_save_submit($form, &$form_state) {
       db_merge('abjs_test_experience')
         ->key(array(
           'tid' => $tid,
-          'eid' => $form_state['values']['experiences_fieldset']['experiences'][$i],        
+          'eid' => $form_state['values']['experiences_fieldset']['experiences'][$i],
       ))->fields(array(
           'tid' => $tid,
           'eid' => $form_state['values']['experiences_fieldset']['experiences'][$i],
-          'fraction' => $form_state['values']['experiences_fieldset']['experience_fractions'][$i],        
-      ))->execute();      
+          'fraction' => $form_state['values']['experiences_fieldset']['experience_fractions'][$i],
+      ))->execute();
     }
   }
   $msg = !empty($form_state['values']['tid']) ? t("Successfully updated test") : t("Successfully saved new test");
-  drupal_set_message(check_plain($msg)); 
+  drupal_set_message(check_plain($msg));
   drupal_goto('/admin/config/abjs/tests');
 }
 
@@ -553,11 +551,18 @@ function abjs_test_delete_confirm_form_submit($form, &$form_state) {
 
 /**
  * Lists all conditions in default table, sorted by modified date.
- * 
- * For each condition, link to edit form, and list created and edited info
+ *
+ * For each condition, link to edit form, and list created and edited info.
  */
 function abjs_condition_admin() {
-  $header = array('ID', 'Name', 'Created', 'Created By', 'Changed', 'Changed By');
+  $header = array(
+    'ID',
+    'Name',
+    'Created',
+    'Created By',
+    'Changed',
+    'Changed By',
+  );
   $rows = array();
 
   $conditions = db_query("SELECT * FROM {abjs_condition} ORDER BY changed DESC, created DESC");
@@ -776,16 +781,16 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
       drupal_set_message(t('The requested experience does not exist.'), 'error');
       return $form;
     }
-    $experience = $experience_result->fetchObject();    
+    $experience = $experience_result->fetchObject();
     $experience_name_default = $experience->name;
     $experience_script_default = $experience->script;
     $form['eid'] = array('#type' => 'value', '#value' => $eid);
   }
 
   $form['name'] = array(
-    '#type' => 'textfield', 
-    '#title' => t('Experience Name'), 
-    '#default_value' => $experience_name_default, 
+    '#type' => 'textfield',
+    '#title' => t('Experience Name'),
+    '#default_value' => $experience_name_default,
     '#size' => 30, 
     '#maxlength' => 50, 
     '#required' => TRUE,
