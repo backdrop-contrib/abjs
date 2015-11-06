@@ -213,9 +213,11 @@ function abjs_preprocess_html(&$vars) {
 
   // Outputting javascript inline above other scripts. Group is set to -1000
   // to output before JS_LIBRARY (which is -100).
-  drupal_add_js($abjs_script, array('type' => 'inline',
-                                    'scope' => 'header',
-                                    'group' => -1000));
+  drupal_add_js($abjs_script, array(
+    'type' => 'inline',
+    'scope' => 'header',
+    'group' => -1000
+  ));
 }
 
 /**
@@ -259,9 +261,9 @@ function abjs_preprocess_html(&$vars) {
  *     active tests, named the same as abTest.experiences above, and using the
  *     experience script from the experience table.
  */
-function abjs_generate_js($tests) {
+function abjs_generate_js(array $tests) {
   if (empty($tests)) {
-    return;
+    return '';
   }
   $abjs_script = "(function(){var abTests = [], abConditions = {}, abExperiences={};\n";
   for ($i = 0; $i < count($tests); $i++) {
