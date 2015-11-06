@@ -676,7 +676,7 @@ function abjs_condition_form_save_submit($form, &$form_state) {
     drupal_set_message(t("Successfully updated condition"));
 
   }
-  else{
+  else {
     // This is a new condition, so use insert.
     db_insert('abjs_condition')
       ->fields(array(
@@ -752,29 +752,38 @@ function abjs_condition_delete_confirm_form_submit($form, &$form_state) {
  * For each experience, link to edit form, and list created and edited info.
  */
 function abjs_experience_admin() {
-  $header = array('ID', 'Name', 'Created', 'Created By', 'Changed', 'Changed By');
+  $header = array(
+    'ID',
+    'Name',
+    'Created',
+    'Created By',
+    'Changed',
+    'Changed By'
+  );
   $rows = array();
 
   $experiences = db_query("SELECT * FROM {abjs_experience} ORDER BY changed DESC, created DESC");
   foreach ($experiences as $experience) {
-    $user_created=user_load($experience->created_by);
-    $user_changed=user_load($experience->changed_by);
-    $rows[] = array($experience->eid,
-                    l($experience->name, '/admin/config/abjs/experiences/' . $experience->eid . '/edit/'),
-                    format_date($experience->created),
-                    $user_created->name,
-                    format_date($experience->changed),
-                    $user_changed->name,
-                );
+    $user_created = user_load($experience->created_by);
+    $user_changed = user_load($experience->changed_by);
+    $rows[] = array(
+      $experience->eid,
+      l($experience->name, '/admin/config/abjs/experiences/' . $experience->eid . '/edit/'),
+      format_date($experience->created),
+      $user_created->name,
+      format_date($experience->changed),
+      $user_changed->name,
+    );
   }
   return theme('table', array('header' => $header, 'rows' => $rows)) . '<br>' . l(t('Add new experience'), '/admin/config/abjs/experiences/add/');
 }
 
 /**
- * Generates form for creating and editing experiences, each consisting of a
- * name and javascript field. $eid will be NULL when adding an experience,
- * and will be a number when editing experiences. $eid is checked throughout
- * the function for determining if this is an add form or edit form.
+ * Generates form for creating and editing experiences.
+ *
+ * Arg. $eid will be NULL when adding an experience, and will be a number
+ * when editing experiences. $eid is checked throughout the function for
+ * determining if this is an add form or edit form.
  */
 function abjs_experience_form($form, &$form_state, $eid = NULL) {
   $form = array();
@@ -835,8 +844,16 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
 
   // Add ace code editor for syntax highlighting on the script field.
   if (variable_get('abjs_ace') == 1) {
-    drupal_add_js('https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js', array('type' => 'external', 'scope' => 'header', 'group' => JS_LIBRARY));
-    drupal_add_js(drupal_get_path('module', 'abjs') . '/abjs-ace-edit.js', array('type' => 'file', 'scope' => 'footer', 'group' => JS_THEME));
+    drupal_add_js('https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js', array(
+      'type' => 'external',
+      'scope' => 'header',
+      'group' => JS_LIBRARY,
+    ));
+    drupal_add_js(drupal_get_path('module', 'abjs') . '/abjs-ace-edit.js', array(
+      'type' => 'file',
+      'scope' => 'footer',
+      'group' => JS_THEME,
+    ));
   }
   return $form;
 }
@@ -859,7 +876,7 @@ function abjs_experience_form_save_submit($form, &$form_state) {
       ->execute();
     drupal_set_message(t("Successfully updated experience"));
   }
-  else{
+  else {
     // This is a new experience, so use insert.
     db_insert('abjs_experience')
       ->fields(array(
@@ -876,7 +893,7 @@ function abjs_experience_form_save_submit($form, &$form_state) {
 }
 
 /**
- * Redirects to experience admin page
+ * Redirects to experience admin page.
  */
 function abjs_experience_form_cancel_submit($form, &$form_state) {
   $form_state['redirect'] = array('admin/config/abjs/experiences/');
