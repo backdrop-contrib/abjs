@@ -61,7 +61,17 @@ function abjs_settings_admin($form, &$form_state) {
  * and created and edited info.
  */
 function abjs_test_admin() {
-  $header = array('ID', 'Name', 'Status', 'Conditions', 'Experiences', 'Created', 'Created By', 'Changed', 'Changed By');
+  $header = array(
+    'ID',
+    'Name',
+    'Status',
+    'Conditions',
+    'Experiences',
+    'Created',
+    'Created By',
+    'Changed',
+    'Changed By'
+  );
   $rows = array();
   $active_array = array('Inactive', 'Active');
   $tests = db_query("SELECT * FROM {abjs_test} ORDER BY active DESC, changed DESC, created DESC");
@@ -73,7 +83,7 @@ function abjs_test_admin() {
       foreach ($conditions as $condition) {
         $condition_list .= '<li>' . l($condition->name . ' (' . $condition->cid . ')', '/admin/config/abjs/conditions/' . $condition->cid . '/edit/') . '</li>';
       }
-      $condition_list .= "</ul>";      
+      $condition_list .= "</ul>";
     }
     $experience_list = "";
     $experiences = db_query("SELECT te.eid, te.fraction, e.name FROM {abjs_test_experience} AS te INNER JOIN abjs_experience AS e ON te.eid = e.eid WHERE te.tid = :tid", array(':tid' => $test->tid));
@@ -82,20 +92,21 @@ function abjs_test_admin() {
       foreach ($experiences as $experience) {
         $experience_list .= '<li>' . $experience->fraction . ' ' . l($experience->name . ' (' . $experience->eid . ')', '/admin/config/abjs/experiences/' . $experience->eid . '/edit/') . '</li>';
       }
-      $experience_list .= "</ul>";      
-    }    
-    $user_created=user_load($test->created_by);
-    $user_changed=user_load($test->changed_by);
-    $rows[] = array($test->tid,
-                    l($test->name, '/admin/config/abjs/tests/' . $test->tid . '/edit/'),
-                    $active_array[$test->active],
-                    $condition_list,
-                    $experience_list,
-                    format_date($test->created),
-                    $user_created->name,
-                    format_date($test->changed),
-                    $user_changed->name,
-                );
+      $experience_list .= "</ul>";
+    }
+    $user_created = user_load($test->created_by);
+    $user_changed = user_load($test->changed_by);
+    $rows[] = array(
+      $test->tid,
+      l($test->name, '/admin/config/abjs/tests/' . $test->tid . '/edit/'),
+      $active_array[$test->active],
+      $condition_list,
+      $experience_list,
+      format_date($test->created),
+      $user_created->name,
+      format_date($test->changed),
+      $user_changed->name,
+    );
   }
   return theme('table', array('header' => $header, 'rows' => $rows)) . '<br>' . l(t('Add new test'), '/admin/config/abjs/tests/add/');
 }
@@ -104,7 +115,7 @@ function abjs_test_admin() {
 /**
  * Generates a form for adding and editing tests.
  *
- * $tid will be NULL when adding a test, and will be a number when editing
+ * Arg $tid will be NULL when adding a test, and will be a number when editing
  * tests. $tid is checked throughout the function for determining if this
  * is an add form or edit form.
  */
@@ -113,7 +124,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   $test_name_default = "";
   $test_active_default = 0;
   if (!empty($tid)) {
-    //Retrieve the test to prefill the edit form
+    // Retrieve the test to prefill the edit form.
     $test_result = db_query('SELECT name, active FROM {abjs_test} WHERE tid = :tid', array(':tid' => $tid));
     if (empty($test_result)) {
       drupal_set_message(t('The requested test does not exist.'), 'error');
@@ -128,15 +139,15 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   // #tree to be able to access them.
   $form['#tree'] = TRUE;
   $form['name'] = array(
-    '#type' => 'textfield', 
-    '#title' => t('Test Name'), 
-    '#default_value' => $test_name_default, 
-    '#size' => 30, 
+    '#type' => 'textfield',
+    '#title' => t('Test Name'),
+    '#default_value' => $test_name_default,
+    '#size' => 30,
     '#maxlength' => 50,
-    '#required' => TRUE, 
+    '#required' => TRUE,
   );
 
-  // Make select list of conditions
+  // Make select list of conditions.
   $conditions = db_query("SELECT cid, name FROM {abjs_condition} ORDER BY cid ASC, created DESC");
   $options_array = array(0 => 'Select Condition');
   foreach ($conditions as $condition) {
@@ -162,9 +173,9 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     if (!empty($tid)) {
       $existing_conditions = db_query("SELECT cid FROM {abjs_test_condition} WHERE tid = :tid", array(':tid' => $tid));
       if (!empty($existing_conditions)) {
-        $existing_conditions_count =  $existing_conditions->rowCount();
+        $existing_conditions_count = $existing_conditions->rowCount();
         $form_state['num_conditions'] = $existing_conditions_count;
-      }    
+      }
     }
   }
 
@@ -172,8 +183,8 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   for ($i = 0; $i < $existing_conditions_count; $i++) {
     $existing_condition = $existing_conditions->fetchObject();
     $form['conditions_fieldset']['conditions'][$i] = array(
-      '#type' => 'select', 
-      '#title' => t('Select Condition'), 
+      '#type' => 'select',
+      '#title' => t('Select Condition'),
       '#options' => $options_array,
       '#default_value' => $existing_condition->cid,
       '#required' => TRUE,
@@ -184,8 +195,8 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   // remove buttons.
   for ($i = $existing_conditions_count; $i < $form_state['num_conditions']; $i++) {
     $form['conditions_fieldset']['conditions'][$i] = array(
-      '#type' => 'select', 
-      '#title' => t('Select Condition'), 
+      '#type' => 'select',
+      '#title' => t('Select Condition'),
       '#options' => $options_array,
       '#default_value' => 0,
       '#required' => TRUE,
@@ -219,7 +230,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   }
 
   // Now do the same for experiences.
-  // Make select list of experiences
+  // Make select list of experiences.
   $experiences = db_query("SELECT eid, name FROM {abjs_experience} ORDER BY changed DESC, created DESC");
   $options_array = array(0 => 'Select Experience');
   foreach ($experiences as $experience) {
@@ -244,7 +255,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     if (!empty($tid)) {
       $existing_experiences = db_query("SELECT eid, fraction FROM {abjs_test_experience} WHERE tid = :tid", array(':tid' => $tid));
       if (!empty($existing_experiences)) {
-        $existing_experiences_count =  $existing_experiences->rowCount();
+        $existing_experiences_count = $existing_experiences->rowCount();
         $form_state['num_experiences'] = $existing_experiences_count;
       }
     }
@@ -255,18 +266,18 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   for ($i = 0; $i < $existing_experiences_count; $i++) {
     $existing_experience = $existing_experiences->fetchObject();
     $form['experiences_fieldset']['experiences'][$i] = array(
-      '#type' => 'select', 
-      '#title' => t('Experience %i', array('%i' => $i + 1)), 
+      '#type' => 'select',
+      '#title' => t('Experience %i', array('%i' => $i + 1)),
       '#options' => $options_array,
       '#default_value' => $existing_experience->eid,
       '#required' => TRUE,
     );
     $form['experiences_fieldset']['experience_fractions'][$i] = array(
-      '#type' => 'textfield', 
-      '#title' => t('Experience %i Fraction', array('%i' => $i + 1)), 
-      '#default_value' => $existing_experience->fraction, 
-      '#size' => 5, 
-      '#maxlength' => 10, 
+      '#type' => 'textfield',
+      '#title' => t('Experience %i Fraction', array('%i' => $i + 1)),
+      '#default_value' => $existing_experience->fraction,
+      '#size' => 5,
+      '#maxlength' => 10,
       '#required' => TRUE,
     );
   }
@@ -275,19 +286,19 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   // buttons.
   for ($i = $existing_experiences_count; $i < $form_state['num_experiences']; $i++) {
     $form['experiences_fieldset']['experiences'][$i] = array(
-      '#type' => 'select', 
-      '#title' => t('Experience %i', array('%i' => $i +1 )), 
+      '#type' => 'select',
+      '#title' => t('Experience %i', array('%i' => $i +1 )),
       '#options' => $options_array,
       '#default_value' => 0,
       '#required' => TRUE,
     );
     $form['experiences_fieldset']['experience_fractions'][$i] = array(
-      '#type' => 'textfield', 
-      '#title' => t('Experience %i Fraction', array('%i' => $i + 1)), 
-      '#default_value' => '', 
-      '#size' => 5, 
+      '#type' => 'textfield',
+      '#title' => t('Experience %i Fraction', array('%i' => $i + 1)),
+      '#default_value' => '',
+      '#size' => 5,
       '#maxlength' => 10,
-      '#required' => TRUE, 
+      '#required' => TRUE,
     );
   }
 
@@ -319,12 +330,12 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
 
   // Add selector for activating/deactivating test.
   $form['active'] = array(
-    '#type' => 'select', 
-    '#title' => t('Status'), 
+    '#type' => 'select',
+    '#title' => t('Status'),
     '#options' => array(
       0 => t('Inactive'),
       1 => t('Active'),
-     ),
+    ),
     '#default_value' => $test_active_default,
   );
 
@@ -422,7 +433,7 @@ function abjs_test_form_save_submit($form, &$form_state) {
         'name' => $form_state['values']['name'],
         'active' => $form_state['values']['active'],
         'changed' => REQUEST_TIME,
-        'changed_by' => $user->uid,        
+        'changed_by' => $user->uid,
     ))->condition('tid', $tid, '=')
       ->execute();
 
@@ -832,7 +843,7 @@ function abjs_experience_form_save_submit($form, &$form_state) {
         'name' => $form_state['values']['name'],
         'script' => $form_state['values']['script'],
         'changed' => REQUEST_TIME,
-        'changed_by' => $user->uid,        
+        'changed_by' => $user->uid,
       ))
       ->condition('eid', $form_state['values']['eid'], '=')
       ->execute();
@@ -847,7 +858,7 @@ function abjs_experience_form_save_submit($form, &$form_state) {
         'created' => REQUEST_TIME,
         'created_by' => $user->uid,
         'changed' => REQUEST_TIME,
-        'changed_by' => $user->uid,        
+        'changed_by' => $user->uid,
       ))->execute();
     drupal_set_message(t("Successfully saved new experience")); 
   }
