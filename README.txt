@@ -12,7 +12,10 @@ CONTENTS OF THIS FILE
 INTRODUCTION
 ------------
 
-This module allows performant A/B and multivariate testing on your site via a lightweight JS script. It is similar to Optimizely and Adobe Test&Target, but focused more on flexibility and power and less on allowing non-technical folks to setup tests.
+This module allows performant A/B and multivariate testing on your site via a
+lightweight JS script. It is similar to Optimizely and Adobe Test&Target, but
+focused more on flexibility and power and less on allowing non-technical folks
+to setup tests.
 
  * For a full description of the module, visit the project page:
    https://www.drupal.org/sandbox/mmowers/2601142

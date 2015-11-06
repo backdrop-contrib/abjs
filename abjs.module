@@ -2,9 +2,7 @@
 
 /**
  * @file
- * Define permissions; Define admin form paths for adding/editing/deleting
- * tests, conditions, and experiences; Output javascript for implementation
- * of the tests.
+ * Define permissions and admin form paths, and write test JavaScript.
  */
 
 /**
@@ -200,7 +198,7 @@ function abjs_preprocess_html(&$vars) {
   // experience associated with them.
   $test_results = db_query("SELECT DISTINCT t.tid FROM {abjs_test} AS t INNER JOIN {abjs_test_condition} AS tc ON t.tid = tc.tid INNER JOIN {abjs_test_experience} AS te ON t.tid = te.tid WHERE t.active=1");
   $tests = $test_results->fetchAll();
-  
+
   // At least one test with at least one condition and at least one experience.
   // must be active for any script to be added to the page. Because of this,
   // we don't need a similar check later for conditions and experiences
@@ -215,18 +213,19 @@ function abjs_preprocess_html(&$vars) {
 
   // Outputting javascript inline above other scripts. Group is set to -1000
   // to output before JS_LIBRARY (which is -100).
-  drupal_add_js($abjs_script, array('type' => 'inline', 'scope' => 'header', 'group' => -1000));
+  drupal_add_js($abjs_script, array('type' => 'inline',
+                                    'scope' => 'header',
+                                    'group' => -1000));
 }
 
 /**
- *
  * Builds the javascript for all active and valid A/B tests.
  *
- * @param $tests
+ * @param array $tests
  *   An array of database result objects from a query on abjs_test to get all
  *   active and valid tests.
  *
- * @return
+ * @return string
  *   A string of javascript for running all tests.
  *
  *   - abTests will be an array of test objects. Each abTest object has these
@@ -271,7 +270,7 @@ function abjs_generate_js($tests) {
                     "abTests[$i].name = 't_{$tests[$i]->tid}';\n" .
                     "abTests[$i].conditions = [];\n" .
                     "abTests[$i].experiences = [];\n";
-    
+
     // Get all conditions associated with this test,and make functions for the
     // scripts.
     $condition_results = db_query("SELECT tc.tid, tc.cid, c.script FROM {abjs_condition} AS c INNER JOIN {abjs_test_condition} AS tc ON c.cid = tc.cid WHERE tc.tid = :tid", array(':tid' => $tests[$i]->tid));
@@ -296,7 +295,7 @@ function abjs_generate_js($tests) {
                       "abExperiences.$exp_func_name = function(){{$experiences[$j]->script}\n};\n";
     }
   }
-  
+
   // The following is the core functionality of the A/B testing javascript
   // framework. Visitors that pass the assigned condition scripts for each test
   // will be randomly placed and cookied into an experience for that test,
@@ -305,8 +304,7 @@ function abjs_generate_js($tests) {
   // experience scripts are executed for each visitor on every page load, in
   // the order in which the tests are defined. The user will have one cookie
   // for each active test.
-  
-  //these are the only php variables referenced in the script below.
+  // These are the only php variables referenced in the script below.
   $cookie_prefix_var = variable_get('abjs_cookie_prefix');
   $cookie_lifetime_var = variable_get('abjs_cookie_lifetime');
   $cookie_domain_var = variable_get('abjs_cookie_domain');

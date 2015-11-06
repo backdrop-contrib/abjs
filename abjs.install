@@ -2,9 +2,11 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the abjs module. Settings variables are initially set.
- * All table schemas for the Test, Condition, and Experience data are defined in custom schemas.
- * Two tables are used to store the Conditions and Experiences that are used in each Test.
+ * Install, update and uninstall functions for the abjs module.
+ *
+ * Settings variables are initially set. All table schemas for the Test,
+ * Condition, and Experience data are defined in custom schemas. Two tables are
+ * used to store the Conditions and Experiences that are used in each Test.
  */
 
 /**
@@ -173,7 +175,6 @@ function abjs_schema() {
     ),
     'primary key' => array('cid'),
   );
-
 
   $schema['abjs_test_experience'] = array(
     'description' => 'The table associating a/b tests with experiences.',
