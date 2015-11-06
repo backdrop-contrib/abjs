@@ -1,6 +1,6 @@
 /**
  * @file
- * Adds ACE code editor to replace and sync with javascript textareas
+ * Adds ACE code editor to replace and sync with javascript textareas.
  */
 
 jQuery(document).ready(function () {
