@@ -2,64 +2,64 @@
 
 /**
  * @file
- * Admin forms for viewing/adding/editing/deleting tests, conditions, and experiences
+ * Admin forms to view/add/edit/delete tests, conditions, experiences.
  */
 
-
 /**
-* Sets variables that will be used in the testing script that is output (see abjs_preprocess_html)
-*/
+ * Sets variables that will be used in the test JavaScript that is output.
+ */
 function abjs_settings_admin($form, &$form_state) {
-  //Each applicable test will have one cookie. The cookie prefix will prefix the name of all test cookies.
+  // Each applicable test will have one cookie. The cookie prefix will prefix
+  // the name of all test cookies.
   $form['abjs_cookie_prefix'] = array(
-    '#type' => 'textfield', 
-    '#title' => t('Cookie Prefix'), 
-    '#default_value' => variable_get('abjs_cookie_prefix'), 
+    '#type' => 'textfield',
+    '#title' => t('Cookie Prefix'),
+    '#default_value' => variable_get('abjs_cookie_prefix'),
     '#description' => t('This string will prefix all A/B test cookie names'),
-    '#size' => 10, 
-    '#maxlength' => 10, 
+    '#size' => 10,
+    '#maxlength' => 10,
   );
   $form['abjs_cookie_lifetime'] = array(
-    '#type' => 'textfield', 
-    '#title' => t('Cookie Lifetime'), 
+    '#type' => 'textfield',
+    '#title' => t('Cookie Lifetime'),
     '#description' => t('Enter cookie lifetime in days'),
-    '#default_value' => variable_get('abjs_cookie_lifetime'), 
-    '#size' => 4, 
-    '#maxlength' => 10, 
+    '#default_value' => variable_get('abjs_cookie_lifetime'),
+    '#size' => 4,
+    '#maxlength' => 10,
   );
   $form['abjs_cookie_domain'] = array(
-    '#type' => 'textfield', 
-    '#title' => t('Cookie Domain'), 
+    '#type' => 'textfield',
+    '#title' => t('Cookie Domain'),
     '#description' => t('Leave blank to use current domain'),
-    '#default_value' => variable_get('abjs_cookie_domain'), 
-    '#size' => 50, 
-    '#maxlength' => 100, 
+    '#default_value' => variable_get('abjs_cookie_domain'),
+    '#size' => 50,
+    '#maxlength' => 100,
   );
   $form['abjs_cookie_secure'] = array(
-    '#type' => 'select', 
-    '#title' => t('Use Secure Cookies?'), 
+    '#type' => 'select',
+    '#title' => t('Use Secure Cookies?'),
     '#description' => t('This sets the secure flag on A/B test cookies'),
-    '#options' => array(0 => t('No'), 1 => t('Yes'), ),
-    '#default_value' => variable_get('abjs_cookie_secure'), 
+    '#options' => array(0 => t('No'), 1 => t('Yes')),
+    '#default_value' => variable_get('abjs_cookie_secure'),
   );
   $form['abjs_ace'] = array(
-    '#type' => 'select', 
-    '#title' => t('Use Ace Code Editor?'), 
+    '#type' => 'select',
+    '#title' => t('Use Ace Code Editor?'),
     '#description' => t('Use Ace Code Editor for entering Condition and Experience scripts'),
-    '#options' => array(0 => t('No'), 1 => t('Yes'), ),
-    '#default_value' => variable_get('abjs_ace'), 
+    '#options' => array(0 => t('No'), 1 => t('Yes')),
+    '#default_value' => variable_get('abjs_ace'),
   );
   return system_settings_form($form);
 }
 
-
-
-
-//-------------Tests functions-----------------//
 /**
-* Lists all tests in a default table theme, sorted by active tests first, then modified most recently, then created most recently.
-* For each test, link to test, and list active status, conditions applied (with links), experiences with fractions assigned (with links), and created and edited info
-*/
+ * Lists all tests in a default table theme.
+ *
+ * Sorted by active tests first, then modified most recently, then created most
+ * recently. For each test, link to test, and list active status, conditions
+ * applied (with links), experiences with fractions assigned (with links),
+ * and created and edited info.
+ */
 function abjs_test_admin() {
   $header = array('ID', 'Name', 'Status', 'Conditions', 'Experiences', 'Created', 'Created By', 'Changed', 'Changed By');
   $rows = array();
@@ -102,10 +102,12 @@ function abjs_test_admin() {
 
 
 /**
-* Generates a form for adding and editing tests. $tid will be NULL when adding a test,
-* and will be a number when editing tests. $tid is checked throughout the function for determining if
-* this is an add form or edit form.
-*/
+ * Generates a form for adding and editing tests.
+ *
+ * $tid will be NULL when adding a test, and will be a number when editing
+ * tests. $tid is checked throughout the function for determining if this
+ * is an add form or edit form.
+ */
 function abjs_test_form($form, &$form_state, $tid = NULL) {
   $form = array();
   $test_name_default = "";
@@ -134,14 +136,15 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     '#required' => TRUE, 
   );
 
-  //Make select list of conditions
+  // Make select list of conditions
   $conditions = db_query("SELECT cid, name FROM {abjs_condition} ORDER BY cid ASC, created DESC");
   $options_array = array(0 => 'Select Condition');
   foreach ($conditions as $condition) {
     $options_array[$condition->cid] = $condition->name . ' (' . $condition->cid . ')';
   }
 
-  //Group conditions together, and allow for adding and removing conditions via AJAX incide this fieldset
+  // Group conditions together, and allow for adding and removing conditions
+  // via AJAX incide this fieldset.
   $form['conditions_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Conditions'),
@@ -153,7 +156,8 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
 
   $existing_conditions_count = 0;
   if (empty($form_state['num_conditions'])) {
-    //On initial load, get the number of condition select fields (1 for add form, query the number for edit form)
+    // On initial load, get the number of condition select fields (1 for add
+    // form, query the number for edit form).
     $form_state['num_conditions'] = 1;
     if (!empty($tid)) {
       $existing_conditions = db_query("SELECT cid FROM {abjs_test_condition} WHERE tid = :tid", array(':tid' => $tid));
@@ -164,7 +168,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     }
   }
 
-  //Prefill all the condition select fields that exist
+  // Prefill all the condition select fields that exist.
   for ($i = 0; $i < $existing_conditions_count; $i++) {
     $existing_condition = $existing_conditions->fetchObject();
     $form['conditions_fieldset']['conditions'][$i] = array(
@@ -176,7 +180,8 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     );
   }
 
-  //Add number of sesgment fields determined by use of Ajax Add and remove buttons
+  // Add number of sesgment fields determined by use of Ajax Add and
+  // remove buttons.
   for ($i = $existing_conditions_count; $i < $form_state['num_conditions']; $i++) {
     $form['conditions_fieldset']['conditions'][$i] = array(
       '#type' => 'select', 
@@ -187,7 +192,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     );
   }
 
-  //Ajax add button
+  // Ajax add button.
   $form['conditions_fieldset']['add_condition'] = array(
     '#type' => 'submit',
     '#value' => t('Add another condition'),
@@ -199,7 +204,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     '#limit_validation_errors' => array(),
   );
 
-  //Ajax Remove button
+  // Ajax Remove button.
   if ($form_state['num_conditions'] > 1) {
     $form['conditions_fieldset']['remove_condition'] = array(
       '#type' => 'submit',
@@ -213,15 +218,16 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     );
   }
 
-  //Now do the same for experiences
-  //Make select list of experiences
+  // Now do the same for experiences.
+  // Make select list of experiences
   $experiences = db_query("SELECT eid, name FROM {abjs_experience} ORDER BY changed DESC, created DESC");
   $options_array = array(0 => 'Select Experience');
   foreach ($experiences as $experience) {
     $options_array[$experience->eid] = $experience->name . ' (' . $experience->eid . ')';
   }
 
-  //Group experiences together, and allow for adding and removing experiences via AJAX incide this fieldset
+  // Group experiences together, and allow for adding and removing experiences
+  // via AJAX incide this fieldset.
   $form['experiences_fieldset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Experiences'),
@@ -232,7 +238,8 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   );
   $existing_experiences_count = 0;
   if (empty($form_state['num_experiences'])) {
-    //On initial load, get the number of experience select fields (1 for add form, query the number for edit form)
+    // On initial load, get the number of experience select fields (1 for add
+    // form, query the number for edit form).
     $form_state['num_experiences'] = 1;
     if (!empty($tid)) {
       $existing_experiences = db_query("SELECT eid, fraction FROM {abjs_test_experience} WHERE tid = :tid", array(':tid' => $tid));
@@ -243,7 +250,8 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     }
   }
 
-  //Prefill all the experience select fields that exist, including fractions for each experience
+  // Prefill all the experience select fields that exist, including fractions
+  // for each experience.
   for ($i = 0; $i < $existing_experiences_count; $i++) {
     $existing_experience = $existing_experiences->fetchObject();
     $form['experiences_fieldset']['experiences'][$i] = array(
@@ -263,7 +271,8 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     );
   }
 
-  //Add number of experience fields determined by use of Ajax Add and remove buttons
+  // Add number of experience fields determined by use of Ajax Add and remove
+  // buttons.
   for ($i = $existing_experiences_count; $i < $form_state['num_experiences']; $i++) {
     $form['experiences_fieldset']['experiences'][$i] = array(
       '#type' => 'select', 
@@ -282,7 +291,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     );
   }
 
-  //Ajax add button
+  // Ajax add button.
   $form['experiences_fieldset']['add_experience'] = array(
     '#type' => 'submit',
     '#value' => t('Add another experience'),
@@ -294,7 +303,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     '#limit_validation_errors' => array(),
   );
 
-  //Ajax Remove button
+  // Ajax Remove button.
   if ($form_state['num_experiences'] > 1) {
     $form['experiences_fieldset']['remove_experience'] = array(
       '#type' => 'submit',
@@ -308,7 +317,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     );
   }
 
-  //Add selector for activating/deactivating test
+  // Add selector for activating/deactivating test.
   $form['active'] = array(
     '#type' => 'select', 
     '#title' => t('Status'), 
@@ -319,7 +328,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     '#default_value' => $test_active_default,
   );
 
-  //Save test
+  // Save test.
   $form['actions']['save'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -327,7 +336,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     '#submit' => array('abjs_test_form_save_submit'),
   );
 
-  //Cancel test and return to admin tests page
+  // Cancel test and return to admin tests page.
   $form['actions']['cancel'] = array(
     '#type' => 'submit',
     '#value' => t('Cancel'),
@@ -336,7 +345,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     '#limit_validation_errors' => array(),
   );
 
-  //Delete test
+  // Delete test.
   if (!empty($tid)) {
     $form['actions']['delete'] = array(
       '#type' => 'submit',
@@ -349,23 +358,23 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
 }
 
 /**
-* Adds condition select fields to abjs_test_form 
-*/
+ * Adds condition select fields to abjs_test_form.
+ */
 function abjs_ajax_add_condition($form, &$form_state) {
   $form_state['num_conditions']++;
   $form_state['rebuild'] = TRUE;
 }
 
 /**
-* Assigns Ajax changes to conditions fieldset in abjs_test_form 
-*/
+ * Assigns Ajax changes to conditions fieldset in abjs_test_form.
+ */
 function abjs_ajax_conditions_callback($form, $form_state) {
   return $form['conditions_fieldset'];
 }
 
 /**
-* Removes condition select fields to abjs_test_form 
-*/
+ * Removes condition select fields to abjs_test_form.
+ */
 function abjs_ajax_remove_condition($form, &$form_state) {
   if ($form_state['num_conditions'] > 1) {
     $form_state['num_conditions']--;
@@ -374,23 +383,23 @@ function abjs_ajax_remove_condition($form, &$form_state) {
 }
 
 /**
-* Adds experience select fields and fractions to abjs_test_form 
-*/
+ * Adds experience select fields and fractions to abjs_test_form.
+ */
 function abjs_ajax_add_experience($form, &$form_state) {
   $form_state['num_experiences']++;
   $form_state['rebuild'] = TRUE;
 }
 
 /**
-* Assigns Ajax changes to experiences fieldset in abjs_test_form 
-*/
+ * Assigns Ajax changes to experiences fieldset in abjs_test_form.
+ */
 function abjs_ajax_experiences_callback($form, $form_state) {
   return $form['experiences_fieldset'];
 }
 
 /**
-* Removes experience select fields and fractions to abjs_test_form 
-*/
+ * Removes experience select fields and fractions to abjs_test_form.
+ */
 function abjs_ajax_remove_experience($form, &$form_state) {
   if ($form_state['num_experiences'] > 1) {
     $form_state['num_experiences']--;
@@ -401,12 +410,12 @@ function abjs_ajax_remove_experience($form, &$form_state) {
 
 
 /**
-* Save function for new and edited tests. Check for new vs edit by using tid
-*/
+ * Save function for new and edited tests. Check for new vs edit by using tid.
+ */
 function abjs_test_form_save_submit($form, &$form_state) {
   global $user; 
   if (!empty($form_state['values']['tid'])) {
-    //This is an existing test, so update instead of insert
+    // This is an existing test, so update instead of insert.
     $tid = $form_state['values']['tid'];
     db_update('abjs_test')
       ->fields(array(
@@ -417,8 +426,8 @@ function abjs_test_form_save_submit($form, &$form_state) {
     ))->condition('tid', $tid, '=')
       ->execute();
 
-    //Delete all entries in the test-condition and test-experience tables to make
-    //life easy. Re-insert them later in this function.
+    // Delete all entries in the test-condition and test-experience tables to
+    // make life easy. Re-insert them later in this function.
     db_delete('abjs_test_condition')
         ->condition('tid', $tid)
         ->execute();
@@ -427,7 +436,7 @@ function abjs_test_form_save_submit($form, &$form_state) {
         ->execute();   
   }
   else{
-    //This is a new test, so insert it
+    // This is a new test, so insert it.
     $tid = db_insert('abjs_test')
       ->fields(array(
         'name' => $form_state['values']['name'],
@@ -439,11 +448,12 @@ function abjs_test_form_save_submit($form, &$form_state) {
       ))->execute();    
   }
 
-  //Whether new or existing test, insert conditions and experiences for this test
-  //into the test-condition and test-experience tables. If this is an existing test,
-  //an earlier step deleted all the existing rows for this test in these tables.
-  //Using db_merge instead of db_insert in case multiple of the same condition
-  //or experience were entered, in which case this will collapse them to one.
+  // Whether new or existing test, insert conditions and experiences for this
+  // test into the test-condition and test-experience tables. If this is an
+  // existing test, an earlier step deleted all the existing rows for this
+  // test in these tables. Using db_merge instead of db_insert in case
+  // multiple of the same condition or experience were entered, in which case
+  // this will collapse them to one.
   foreach ($form_state['values']['conditions_fieldset']['conditions'] as $cid) {
     if ($cid > 0) {
       db_merge('abjs_test_condition')
@@ -475,22 +485,22 @@ function abjs_test_form_save_submit($form, &$form_state) {
 }
 
 /**
-* Redirects back to tests admin page
-*/
+ * Redirects back to tests admin page.
+ */
 function abjs_test_form_cancel_submit($form, &$form_state) {
   $form_state['redirect'] = array('admin/config/abjs/tests/');
 }
 
 /**
-* Redirects to delete path
-*/
+ * Redirects to delete path.
+ */
 function abjs_test_form_delete_submit($form, &$form_state) {
   $form_state['redirect'] = array('admin/config/abjs/tests/' . $form_state['values']['tid'] . '/delete');
 }
 
 /**
-* Returns confirmation form for deleting a test
-*/
+ * Returns confirmation form for deleting a test.
+ */
 function abjs_test_delete_confirm_form($form, &$form_state, $tid) {
   $form = array();
   $test_result = db_query('SELECT name FROM {abjs_test} WHERE tid = :tid', array(':tid' => $tid));
@@ -510,8 +520,8 @@ function abjs_test_delete_confirm_form($form, &$form_state, $tid) {
 }
 
 /**
-* Deletes test and associated test-condition and test-experience rows 
-*/
+ * Deletes test and associated test-condition and test-experience rows.
+ */
 function abjs_test_delete_confirm_form_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     db_delete('abjs_test')
@@ -530,13 +540,11 @@ function abjs_test_delete_confirm_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/abjs/tests';
 }
 
-
-//-------------End Tests functions-----------------//
-//-------------Condition functions-----------------//
 /**
-* Lists all conditions in default table, sorted by modified date
-* For each condition, link to edit form, and list created and edited info
-*/
+ * Lists all conditions in default table, sorted by modified date.
+ * 
+ * For each condition, link to edit form, and list created and edited info
+ */
 function abjs_condition_admin() {
   $header = array('ID', 'Name', 'Created', 'Created By', 'Changed', 'Changed By');
   $rows = array();
@@ -557,9 +565,11 @@ function abjs_condition_admin() {
 }
 
 /**
-* Generates form for creating and editing conditions, each consisting of a name and javascript field. $cid will be NULL when adding a condition,
-* and will be a number when editing conditions. $cid is checked throughout the function for determining if
-* this is an add form or edit form.
+* Generates a form for creating and editing conditions.
+* 
+* $cid will be NULL when adding a condition, and will be a number when
+* editing conditions. $cid is checked throughout the function for determining
+* if this is an add form or edit form.
 */
 function abjs_condition_form($form, &$form_state, $cid = NULL) {
   $form = array();
@@ -617,7 +627,7 @@ function abjs_condition_form($form, &$form_state, $cid = NULL) {
     );
   }
 
-  //Add ace code editor for syntax highlighting on the script field
+  // Add ace code editor for syntax highlighting on the script field
   if (variable_get('abjs_ace') == 1) {
     drupal_add_js('https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js', array('type' => 'external', 'scope' => 'header', 'group' => JS_LIBRARY));
     drupal_add_js(drupal_get_path('module', 'abjs') . '/abjs-ace-edit.js');
@@ -627,12 +637,12 @@ function abjs_condition_form($form, &$form_state, $cid = NULL) {
 }
 
 /**
-* Saves new and modified conditions into condition table
-*/
+ * Saves new and modified conditions into condition table.
+ */
 function abjs_condition_form_save_submit($form, &$form_state) {
   global $user;
   if (!empty($form_state['values']['cid'])) {
-    //This is a modified condition, so use update
+    // This is a modified condition, so use update.
     db_update('abjs_condition')
       ->fields(array(
         'name' => $form_state['values']['name'],
@@ -646,7 +656,7 @@ function abjs_condition_form_save_submit($form, &$form_state) {
 
   }
   else{
-    //This is a new condition, so use insert
+    // This is a new condition, so use insert.
     db_insert('abjs_condition')
       ->fields(array(
         'name' => $form_state['values']['name'],
@@ -663,22 +673,22 @@ function abjs_condition_form_save_submit($form, &$form_state) {
 }
 
 /**
-* Redirects to condition admin page
-*/
+ * Redirects to condition admin page.
+ */
 function abjs_condition_form_cancel_submit($form, &$form_state) {
   $form_state['redirect'] = array('admin/config/abjs/conditions/');
 }
 
 /**
-* Redirects to condition delete path
-*/
+ * Redirects to condition delete path.
+ */
 function abjs_condition_form_delete_submit($form, &$form_state) {
   $form_state['redirect'] = array('admin/config/abjs/conditions/' . $form_state['values']['cid'] . '/delete');
 }
 
 /**
-* Returns confirm form for deleting condition
-*/
+ * Returns confirm form for deleting condition.
+ */
 function abjs_condition_delete_confirm_form($form, &$form_state, $cid) {
   $form = array();
   $condition_result = db_query('SELECT name FROM {abjs_condition} WHERE cid = :cid', array(':cid' => $cid));
@@ -698,8 +708,8 @@ function abjs_condition_delete_confirm_form($form, &$form_state, $cid) {
 }
 
 /**
-* Deletes condition from condition table, as well as all test-condition entries for this condition
-*/
+ * Deletes condition and associated test-conditions.
+ */
 function abjs_condition_delete_confirm_form_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     db_delete('abjs_condition')
@@ -715,13 +725,11 @@ function abjs_condition_delete_confirm_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/abjs/conditions';
 }
 
-
-//-------------End Condition functions-----------------//
-//-------------Experience functions-----------------//
 /**
-* Lists all experiences in default table, sorted by modified date
-* For each experience, link to edit form, and list created and edited info
-*/
+ * Lists all experiences in default table, sorted by modified date.
+ *
+ * For each experience, link to edit form, and list created and edited info.
+ */
 function abjs_experience_admin() {
   $header = array('ID', 'Name', 'Created', 'Created By', 'Changed', 'Changed By');
   $rows = array();
@@ -741,12 +749,12 @@ function abjs_experience_admin() {
   return theme('table', array('header' => $header, 'rows' => $rows)) . '<br>' . l(t('Add new experience'), '/admin/config/abjs/experiences/add/');
 }
 
-
 /**
-* Generates form for creating and editing experiences, each consisting of a name and javascript field. $eid will be NULL when adding an experience,
-* and will be a number when editing experiences. $eid is checked throughout the function for determining if
-* this is an add form or edit form.
-*/
+ * Generates form for creating and editing experiences, each consisting of a
+ * name and javascript field. $eid will be NULL when adding an experience,
+ * and will be a number when editing experiences. $eid is checked throughout
+ * the function for determining if this is an add form or edit form.
+ */
 function abjs_experience_form($form, &$form_state, $eid = NULL) {
   $form = array();
   $experience_name_default = "";
@@ -804,7 +812,7 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
     );    
   }
 
-  //Add ace code editor for syntax highlighting on the script field
+  // Add ace code editor for syntax highlighting on the script field.
   if (variable_get('abjs_ace') == 1) {
     drupal_add_js('https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js', array('type' => 'external', 'scope' => 'header', 'group' => JS_LIBRARY));
     drupal_add_js(drupal_get_path('module', 'abjs') . '/abjs-ace-edit.js', array('type' => 'file', 'scope' => 'footer', 'group' => JS_THEME));
@@ -813,12 +821,12 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
 }
 
 /**
-* Saves new and modified experiences into experience table
-*/
+ * Saves new and modified experiences into experience table.
+ */
 function abjs_experience_form_save_submit($form, &$form_state) {
   global $user; 
   if (!empty($form_state['values']['eid'])) {
-    //This is a modified experience, so use update
+    // This is a modified experience, so use update.
     db_update('abjs_experience')
       ->fields(array(
         'name' => $form_state['values']['name'],
@@ -831,7 +839,7 @@ function abjs_experience_form_save_submit($form, &$form_state) {
     drupal_set_message(t("Successfully updated experience")); 
   }
   else{
-    //This is a new experience, so use insert
+    // This is a new experience, so use insert.
     db_insert('abjs_experience')
       ->fields(array(
         'name' => $form_state['values']['name'],
@@ -847,22 +855,22 @@ function abjs_experience_form_save_submit($form, &$form_state) {
 }
 
 /**
-* Redirects to experience admin page
-*/
+ * Redirects to experience admin page
+ */
 function abjs_experience_form_cancel_submit($form, &$form_state) {
   $form_state['redirect'] = array('admin/config/abjs/experiences/');
 }
 
 /**
-* Redirects to experience delete path for this experience
-*/
+ * Redirects to experience delete path for this experience.
+ */
 function abjs_experience_form_delete_submit($form, &$form_state) {
   $form_state['redirect'] = array('admin/config/abjs/experiences/' . $form_state['values']['eid'] . '/delete');
 }
 
 /**
-* Returns confirm form for deleting experience
-*/
+ * Returns confirm form for deleting experience.
+ */
 function abjs_experience_delete_confirm_form($form, &$form_state, $eid) {
   $form = array();
   $experience_result = db_query('SELECT name FROM {abjs_experience} WHERE eid = :eid', array(':eid' => $eid));
@@ -882,8 +890,8 @@ function abjs_experience_delete_confirm_form($form, &$form_state, $eid) {
 }
 
 /**
-* Deletes experience from experience table, as well as all test-experience rows for this experience
-*/
+ * Deletes experience and associated test-experiences.
+ */
 function abjs_experience_delete_confirm_form_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     db_delete('abjs_experience')

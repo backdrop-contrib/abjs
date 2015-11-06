@@ -216,7 +216,7 @@ function abjs_preprocess_html(&$vars) {
   drupal_add_js($abjs_script, array(
     'type' => 'inline',
     'scope' => 'header',
-    'group' => -1000
+    'group' => -1000,
   ));
 }
 
