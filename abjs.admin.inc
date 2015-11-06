@@ -567,26 +567,27 @@ function abjs_condition_admin() {
 
   $conditions = db_query("SELECT * FROM {abjs_condition} ORDER BY changed DESC, created DESC");
   foreach ($conditions as $condition) {
-    $user_created=user_load($condition->created_by);
-    $user_changed=user_load($condition->changed_by);
-    $rows[] = array($condition->cid,
-                    l($condition->name, '/admin/config/abjs/conditions/' . $condition->cid . '/edit/'),
-                    format_date($condition->created),
-                    $user_created->name,
-                    format_date($condition->changed),
-                    $user_changed->name,
-                );
+    $user_created = user_load($condition->created_by);
+    $user_changed = user_load($condition->changed_by);
+    $rows[] = array(
+      $condition->cid,
+      l($condition->name, '/admin/config/abjs/conditions/' . $condition->cid . '/edit/'),
+      format_date($condition->created),
+      $user_created->name,
+      format_date($condition->changed),
+      $user_changed->name,
+    );
   }
   return theme('table', array('header' => $header, 'rows' => $rows)) . '<br>' . l(t('Add new condition'), '/admin/config/abjs/conditions/add/');
 }
 
 /**
-* Generates a form for creating and editing conditions.
-* 
-* $cid will be NULL when adding a condition, and will be a number when
-* editing conditions. $cid is checked throughout the function for determining
-* if this is an add form or edit form.
-*/
+ * Generates a form for creating and editing conditions.
+ *
+ * Arg. $cid will be NULL when adding a condition, and will be a number when
+ * editing conditions. $cid is checked throughout the function for determining
+ * if this is an add form or edit form.
+ */
 function abjs_condition_form($form, &$form_state, $cid = NULL) {
   $form = array();
   $condition_name_default = "";
@@ -597,27 +598,27 @@ function abjs_condition_form($form, &$form_state, $cid = NULL) {
       drupal_set_message(t('The requested condition does not exist.'), 'error');
       return $form;
     }
-    $condition = $condition_result->fetchObject();    
+    $condition = $condition_result->fetchObject();
     $condition_name_default = $condition->name;
     $condition_script_default = $condition->script;
     $form['cid'] = array('#type' => 'value', '#value' => $cid);
   }
   $form['name'] = array(
-    '#type' => 'textfield', 
-    '#title' => t('Condition Name'), 
-    '#default_value' => $condition_name_default, 
-    '#size' => 30, 
-    '#maxlength' => 50, 
+    '#type' => 'textfield',
+    '#title' => t('Condition Name'),
+    '#default_value' => $condition_name_default,
+    '#size' => 30,
+    '#maxlength' => 50,
     '#required' => TRUE,
   );
 
   $form['script'] = array(
-    '#type' => 'textarea', 
-    '#title' => t('Condition Script'), 
+    '#type' => 'textarea',
+    '#title' => t('Condition Script'),
     '#default_value' => $condition_script_default,
     '#attributes' => array('placeholder' => array("EXAMPLE: return window.location.pathname == '/'")),
     '#description' => t('Any valid javascript with a return statement at the end, returning true or false. Read the documentation for examples'),
-    '#rows' => 3, 
+    '#rows' => 3,
     '#required' => TRUE,
   );
   $form['actions'] = array('#type' => 'actions');
@@ -643,9 +644,13 @@ function abjs_condition_form($form, &$form_state, $cid = NULL) {
     );
   }
 
-  // Add ace code editor for syntax highlighting on the script field
+  // Add ace code editor for syntax highlighting on the script field.
   if (variable_get('abjs_ace') == 1) {
-    drupal_add_js('https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js', array('type' => 'external', 'scope' => 'header', 'group' => JS_LIBRARY));
+    drupal_add_js('https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js', array(
+      'type' => 'external',
+      'scope' => 'header',
+      'group' => JS_LIBRARY,
+    ));
     drupal_add_js(drupal_get_path('module', 'abjs') . '/abjs-ace-edit.js');
   }
 
@@ -664,11 +669,11 @@ function abjs_condition_form_save_submit($form, &$form_state) {
         'name' => $form_state['values']['name'],
         'script' => $form_state['values']['script'],
         'changed' => REQUEST_TIME,
-        'changed_by' => $user->uid,        
+        'changed_by' => $user->uid,
       ))
       ->condition('cid', $form_state['values']['cid'], '=')
       ->execute();
-    drupal_set_message(t("Successfully updated condition")); 
+    drupal_set_message(t("Successfully updated condition"));
 
   }
   else{
@@ -680,9 +685,9 @@ function abjs_condition_form_save_submit($form, &$form_state) {
         'created' => REQUEST_TIME,
         'created_by' => $user->uid,
         'changed' => REQUEST_TIME,
-        'changed_by' => $user->uid,        
+        'changed_by' => $user->uid,
       ))->execute();
-    drupal_set_message(t("Successfully saved new condition")); 
+    drupal_set_message(t("Successfully saved new condition"));
 
   }
   drupal_goto('/admin/config/abjs/conditions');
@@ -791,14 +796,14 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
     '#type' => 'textfield',
     '#title' => t('Experience Name'),
     '#default_value' => $experience_name_default,
-    '#size' => 30, 
-    '#maxlength' => 50, 
+    '#size' => 30,
+    '#maxlength' => 50,
     '#required' => TRUE,
   );
 
   $form['script'] = array(
-    '#type' => 'textarea', 
-    '#title' => t('Experience Script'), 
+    '#type' => 'textarea',
+    '#title' => t('Experience Script'),
     '#default_value' => $experience_script_default,
     '#attributes' => array('placeholder' => array('EXAMPLE: document.write("<style>.sign-up-button { display:none !important; }</style>");')),
     '#description' => t('Any valid javascript to load in head. Leave empty for a Control. Read the documentation for more examples.'),
@@ -825,7 +830,7 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
       '#value' => t('Delete'),
       '#weight' => 15,
       '#submit' => array('abjs_experience_form_delete_submit'),
-    );    
+    );
   }
 
   // Add ace code editor for syntax highlighting on the script field.
@@ -840,7 +845,7 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
  * Saves new and modified experiences into experience table.
  */
 function abjs_experience_form_save_submit($form, &$form_state) {
-  global $user; 
+  global $user;
   if (!empty($form_state['values']['eid'])) {
     // This is a modified experience, so use update.
     db_update('abjs_experience')
@@ -852,7 +857,7 @@ function abjs_experience_form_save_submit($form, &$form_state) {
       ))
       ->condition('eid', $form_state['values']['eid'], '=')
       ->execute();
-    drupal_set_message(t("Successfully updated experience")); 
+    drupal_set_message(t("Successfully updated experience"));
   }
   else{
     // This is a new experience, so use insert.
@@ -865,7 +870,7 @@ function abjs_experience_form_save_submit($form, &$form_state) {
         'changed' => REQUEST_TIME,
         'changed_by' => $user->uid,
       ))->execute();
-    drupal_set_message(t("Successfully saved new experience")); 
+    drupal_set_message(t("Successfully saved new experience"));
   }
   drupal_goto('/admin/config/abjs/experiences');
 }
