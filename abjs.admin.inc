@@ -758,7 +758,7 @@ function abjs_experience_admin() {
     'Created',
     'Created By',
     'Changed',
-    'Changed By'
+    'Changed By',
   );
   $rows = array();
 
