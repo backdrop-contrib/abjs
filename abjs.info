@@ -1,4 +1,4 @@
 name = A/B Testing via JavaScript
 description = "A/B Testing via JavaScript"
 core = 7.x
-configure = admin/config/abjs
+configure = admin/config/abjs/settings
