@@ -30,7 +30,7 @@ function abjs_settings_admin($form, &$form_state) {
   $form['abjs_cookie_domain'] = array(
     '#type' => 'textfield',
     '#title' => t('Cookie Domain'),
-    '#description' => t('Leave blank to use current domain'),
+    '#description' => t('Enter the domain to which the test cookies will be set, e.g. example.com. Leave blank to set the cookies to the domain of the page where the tests are occurring.'),
     '#default_value' => variable_get('abjs_cookie_domain'),
     '#size' => 50,
     '#maxlength' => 100,

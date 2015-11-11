@@ -315,13 +315,13 @@ function abjs_generate_js(array $tests) {
   $cookie_secure_var = variable_get('abjs_cookie_secure');
   $cookie_prefix = !empty($cookie_prefix_var) ? $cookie_prefix_var : 'abjs_';
   $cookie_lifetime = !empty($cookie_lifetime_var) ? $cookie_lifetime_var : '30';
-  $cookie_domain = !empty($cookie_domain_var) ? '"' . $cookie_domain_var . '"' : 'document.domain';
+  $cookie_domain = !empty($cookie_domain_var) ? '; domain=' . $cookie_domain_var : '';
   $cookie_secure = !empty($cookie_secure_var) ? '; secure' : '';
 
   $abjs_script .= <<<EOD
     //--------------------Cookie functions-------------------------------------//
     var cookiePrefix = "$cookie_prefix";
-    var cookieDomain = $cookie_domain;
+    var cookieDomain = "$cookie_domain";
     var cookieLifetime = $cookie_lifetime; //days
     var cookieSecure = "$cookie_secure";
     var abCookies = {
