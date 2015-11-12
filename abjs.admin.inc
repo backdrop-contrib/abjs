@@ -265,14 +265,14 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   // for each experience.
   for ($i = 0; $i < $existing_experiences_count; $i++) {
     $existing_experience = $existing_experiences->fetchObject();
-    $form['experiences_fieldset']['experiences'][$i] = array(
+    $form['experiences_fieldset'][$i]['experience'] = array(
       '#type' => 'select',
       '#title' => t('Experience %i', array('%i' => $i + 1)),
       '#options' => $options_array,
       '#default_value' => $existing_experience->eid,
       '#required' => TRUE,
     );
-    $form['experiences_fieldset']['experience_fractions'][$i] = array(
+    $form['experiences_fieldset'][$i]['experience_fraction'] = array(
       '#type' => 'textfield',
       '#title' => t('Experience %i Fraction', array('%i' => $i + 1)),
       '#default_value' => $existing_experience->fraction,
@@ -285,14 +285,14 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   // Add number of experience fields determined by use of Ajax Add and remove
   // buttons.
   for ($i = $existing_experiences_count; $i < $form_state['num_experiences']; $i++) {
-    $form['experiences_fieldset']['experiences'][$i] = array(
+    $form['experiences_fieldset'][$i]['experience'] = array(
       '#type' => 'select',
       '#title' => t('Experience %i', array('%i' => $i + 1)),
       '#options' => $options_array,
       '#default_value' => 0,
       '#required' => TRUE,
     );
-    $form['experiences_fieldset']['experience_fractions'][$i] = array(
+    $form['experiences_fieldset'][$i]['experience_fraction'] = array(
       '#type' => 'textfield',
       '#title' => t('Experience %i Fraction', array('%i' => $i + 1)),
       '#default_value' => '',
@@ -475,16 +475,16 @@ function abjs_test_form_save_submit($form, &$form_state) {
       ))->execute();
     }
   }
-  for ($i = 0; $i < count($form_state['values']['experiences_fieldset']['experiences']); $i++) {
-    if ($form_state['values']['experiences_fieldset']['experiences'][$i] > 0) {
+  foreach ($form_state['values']['experiences_fieldset'] as $fieldset) {
+    if ($fieldset['experience'] > 0) {
       db_merge('abjs_test_experience')
         ->key(array(
           'tid' => $tid,
-          'eid' => $form_state['values']['experiences_fieldset']['experiences'][$i],
+          'eid' => $fieldset['experience'],
       ))->fields(array(
           'tid' => $tid,
-          'eid' => $form_state['values']['experiences_fieldset']['experiences'][$i],
-          'fraction' => $form_state['values']['experiences_fieldset']['experience_fractions'][$i],
+          'eid' => $fieldset['experience'],
+          'fraction' => $fieldset['experience_fraction'],
       ))->execute();
     }
   }
