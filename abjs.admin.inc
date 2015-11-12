@@ -108,7 +108,7 @@ function abjs_test_admin() {
       $user_changed->name,
     );
   }
-  return theme('table', array('header' => $header, 'rows' => $rows)) . '<br>' . l(t('Add new test'), '/admin/config/abjs/tests/add/');
+  return l(t('Add new test'), '/admin/config/abjs/tests/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 
@@ -578,7 +578,7 @@ function abjs_condition_admin() {
       $user_changed->name,
     );
   }
-  return theme('table', array('header' => $header, 'rows' => $rows)) . '<br>' . l(t('Add new condition'), '/admin/config/abjs/conditions/add/');
+  return l(t('Add new condition'), '/admin/config/abjs/conditions/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 /**
@@ -775,7 +775,7 @@ function abjs_experience_admin() {
       $user_changed->name,
     );
   }
-  return theme('table', array('header' => $header, 'rows' => $rows)) . '<br>' . l(t('Add new experience'), '/admin/config/abjs/experiences/add/');
+  return l(t('Add new experience'), '/admin/config/abjs/experiences/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 /**
