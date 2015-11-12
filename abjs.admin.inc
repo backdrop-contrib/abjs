@@ -206,7 +206,8 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   // Ajax add button.
   $form['conditions_fieldset']['add_condition'] = array(
     '#type' => 'submit',
-    '#value' => t('Add another condition'),
+    '#value' => t('Add'),
+    '#name' => 'add-condition',
     '#submit' => array('abjs_ajax_add_condition'),
     '#ajax' => array(
       'callback' => 'abjs_ajax_conditions_callback',
@@ -219,7 +220,8 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   if ($form_state['num_conditions'] > 1) {
     $form['conditions_fieldset']['remove_condition'] = array(
       '#type' => 'submit',
-      '#value' => t('Remove last condition'),
+      '#value' => t('Remove'),
+      '#name' => 'remove-condition',
       '#submit' => array('abjs_ajax_remove_condition'),
       '#ajax' => array(
         'callback' => 'abjs_ajax_conditions_callback',
@@ -305,7 +307,8 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   // Ajax add button.
   $form['experiences_fieldset']['add_experience'] = array(
     '#type' => 'submit',
-    '#value' => t('Add another experience'),
+    '#value' => t('Add'),
+    '#name' => 'add-experience',
     '#submit' => array('abjs_ajax_add_experience'),
     '#ajax' => array(
       'callback' => 'abjs_ajax_experiences_callback',
@@ -318,7 +321,8 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   if ($form_state['num_experiences'] > 1) {
     $form['experiences_fieldset']['remove_experience'] = array(
       '#type' => 'submit',
-      '#value' => t('Remove last experience'),
+      '#value' => t('Remove'),
+      '#name' => 'remove-experience',
       '#submit' => array('abjs_ajax_remove_experience'),
       '#ajax' => array(
         'callback' => 'abjs_ajax_experiences_callback',
