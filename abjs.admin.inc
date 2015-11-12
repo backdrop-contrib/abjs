@@ -45,7 +45,7 @@ function abjs_settings_admin($form, &$form_state) {
   $form['abjs_ace'] = array(
     '#type' => 'select',
     '#title' => t('Use Ace Code Editor?'),
-    '#description' => t('Use Ace Code Editor for entering Condition and Experience scripts'),
+    '#description' => t('Use Ace Code Editor for entering Condition and Experience scripts. If chosen, it will be loaded via https://cdnjs.cloudflare.com.'),
     '#options' => array(0 => t('No'), 1 => t('Yes')),
     '#default_value' => variable_get('abjs_ace'),
   );
