@@ -4,9 +4,9 @@
  */
 
 (function ($) {
+  'use strict';
   Drupal.behaviors.abjs = {
     attach: function (context, settings) {
-      'use strict';
       if (typeof window.ace !== 'undefined') {
         jQuery('.form-item-script .form-textarea-wrapper').hide();
         jQuery('.form-item-script .form-textarea-wrapper').after('<div id="editor" style="witdh:100%; height:200px;"></div>');
