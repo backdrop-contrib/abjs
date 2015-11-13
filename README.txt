@@ -52,7 +52,7 @@ CONFIGURATION
      This permission allows one to create, edit, and delete Experiences and
      and Conditions, as well as change the general settings of the module.
 
- * Customize the module settings at /admin/config/abjs/configure/settings/.
+ * Customize the module settings at admin/config/user-interface/abjs/settings.
    If Ace Code Editor is chosen, it will load via CDN on the Condition and
    Experience Edit pages.
 

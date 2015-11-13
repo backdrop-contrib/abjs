@@ -81,7 +81,7 @@ function abjs_test_admin() {
     if (!empty($conditions)) {
       $condition_list .= "<ul>";
       foreach ($conditions as $condition) {
-        $condition_list .= '<li>' . l($condition->name . ' (' . $condition->cid . ')', '/admin/config/abjs/configure/conditions/' . $condition->cid . '/edit/') . '</li>';
+        $condition_list .= '<li>' . l($condition->name . ' (' . $condition->cid . ')', '/admin/config/user-interface/abjs/conditions/' . $condition->cid . '/edit/') . '</li>';
       }
       $condition_list .= "</ul>";
     }
@@ -90,7 +90,7 @@ function abjs_test_admin() {
     if (!empty($experiences)) {
       $experience_list .= "<ul>";
       foreach ($experiences as $experience) {
-        $experience_list .= '<li>' . $experience->fraction . ' ' . l($experience->name . ' (' . $experience->eid . ')', '/admin/config/abjs/configure/experiences/' . $experience->eid . '/edit/') . '</li>';
+        $experience_list .= '<li>' . $experience->fraction . ' ' . l($experience->name . ' (' . $experience->eid . ')', '/admin/config/user-interface/abjs/experiences/' . $experience->eid . '/edit/') . '</li>';
       }
       $experience_list .= "</ul>";
     }
@@ -98,7 +98,7 @@ function abjs_test_admin() {
     $user_changed = user_load($test->changed_by);
     $rows[] = array(
       $test->tid,
-      l($test->name, '/admin/config/abjs/configure/tests/' . $test->tid . '/edit/'),
+      l($test->name, '/admin/config/user-interface/abjs/tests/' . $test->tid . '/edit/'),
       $active_array[$test->active],
       $condition_list,
       $experience_list,
@@ -108,7 +108,7 @@ function abjs_test_admin() {
       $user_changed->name,
     );
   }
-  return l(t('Add new test'), '/admin/config/abjs/configure/tests/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
+  return l(t('Add new test'), '/admin/config/user-interface/abjs/tests/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 
@@ -494,21 +494,21 @@ function abjs_test_form_save_submit($form, &$form_state) {
   }
   $msg = !empty($form_state['values']['tid']) ? t("Successfully updated test") : t("Successfully saved new test");
   drupal_set_message(check_plain($msg));
-  drupal_goto('/admin/config/abjs/configure/tests');
+  drupal_goto('/admin/config/user-interface/abjs/tests');
 }
 
 /**
  * Redirects back to tests admin page.
  */
 function abjs_test_form_cancel_submit($form, &$form_state) {
-  $form_state['redirect'] = array('admin/config/abjs/configure/tests/');
+  $form_state['redirect'] = array('admin/config/user-interface/abjs/tests/');
 }
 
 /**
  * Redirects to delete path.
  */
 function abjs_test_form_delete_submit($form, &$form_state) {
-  $form_state['redirect'] = array('admin/config/abjs/configure/tests/' . $form_state['values']['tid'] . '/delete');
+  $form_state['redirect'] = array('admin/config/user-interface/abjs/tests/' . $form_state['values']['tid'] . '/delete');
 }
 
 /**
@@ -523,7 +523,7 @@ function abjs_test_delete_confirm_form($form, &$form_state, $tid) {
     $form['name'] = array('#type' => 'value', '#value' => $test->name);
     return confirm_form($form,
       t('Are you sure you want to delete this test: %name?', array('%name' => $test->name)),
-      'admin/config/abjs/configure/tests',
+      'admin/config/user-interface/abjs/tests',
       t('This action cannot be undone.'),
       t('Delete'),
       t('Cancel')
@@ -550,7 +550,7 @@ function abjs_test_delete_confirm_form_submit($form, &$form_state) {
     drupal_set_message(t('Test "%name" has been deleted.', array('%name' => $form_state['values']['name'])));
   }
 
-  $form_state['redirect'] = 'admin/config/abjs/configure/tests';
+  $form_state['redirect'] = 'admin/config/user-interface/abjs/tests';
 }
 
 /**
@@ -575,14 +575,14 @@ function abjs_condition_admin() {
     $user_changed = user_load($condition->changed_by);
     $rows[] = array(
       $condition->cid,
-      l($condition->name, '/admin/config/abjs/configure/conditions/' . $condition->cid . '/edit/'),
+      l($condition->name, '/admin/config/user-interface/abjs/conditions/' . $condition->cid . '/edit/'),
       format_date($condition->created),
       $user_created->name,
       format_date($condition->changed),
       $user_changed->name,
     );
   }
-  return l(t('Add new condition'), '/admin/config/abjs/configure/conditions/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
+  return l(t('Add new condition'), '/admin/config/user-interface/abjs/conditions/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 /**
@@ -694,21 +694,21 @@ function abjs_condition_form_save_submit($form, &$form_state) {
     drupal_set_message(t("Successfully saved new condition"));
 
   }
-  drupal_goto('/admin/config/abjs/configure/conditions');
+  drupal_goto('/admin/config/user-interface/abjs/conditions');
 }
 
 /**
  * Redirects to condition admin page.
  */
 function abjs_condition_form_cancel_submit($form, &$form_state) {
-  $form_state['redirect'] = array('admin/config/abjs/configure/conditions/');
+  $form_state['redirect'] = array('admin/config/user-interface/abjs/conditions/');
 }
 
 /**
  * Redirects to condition delete path.
  */
 function abjs_condition_form_delete_submit($form, &$form_state) {
-  $form_state['redirect'] = array('admin/config/abjs/configure/conditions/' . $form_state['values']['cid'] . '/delete');
+  $form_state['redirect'] = array('admin/config/user-interface/abjs/conditions/' . $form_state['values']['cid'] . '/delete');
 }
 
 /**
@@ -723,7 +723,7 @@ function abjs_condition_delete_confirm_form($form, &$form_state, $cid) {
     $form['name'] = array('#type' => 'value', '#value' => $condition->name);
     return confirm_form($form,
       t('Are you sure you want to delete this condition: %name?', array('%name' => $condition->name)),
-      'admin/config/abjs/configure/conditions',
+      'admin/config/user-interface/abjs/conditions',
       t('This action cannot be undone.'),
       t('Delete'),
       t('Cancel')
@@ -747,7 +747,7 @@ function abjs_condition_delete_confirm_form_submit($form, &$form_state) {
     drupal_set_message(t('Condition "%name" has been deleted.', array('%name' => $form_state['values']['name'])));
   }
 
-  $form_state['redirect'] = 'admin/config/abjs/configure/conditions';
+  $form_state['redirect'] = 'admin/config/user-interface/abjs/conditions';
 }
 
 /**
@@ -772,14 +772,14 @@ function abjs_experience_admin() {
     $user_changed = user_load($experience->changed_by);
     $rows[] = array(
       $experience->eid,
-      l($experience->name, '/admin/config/abjs/configure/experiences/' . $experience->eid . '/edit/'),
+      l($experience->name, '/admin/config/user-interface/abjs/experiences/' . $experience->eid . '/edit/'),
       format_date($experience->created),
       $user_created->name,
       format_date($experience->changed),
       $user_changed->name,
     );
   }
-  return l(t('Add new experience'), '/admin/config/abjs/configure/experiences/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
+  return l(t('Add new experience'), '/admin/config/user-interface/abjs/experiences/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 /**
@@ -893,21 +893,21 @@ function abjs_experience_form_save_submit($form, &$form_state) {
       ))->execute();
     drupal_set_message(t("Successfully saved new experience"));
   }
-  drupal_goto('/admin/config/abjs/configure/experiences');
+  drupal_goto('/admin/config/user-interface/abjs/experiences');
 }
 
 /**
  * Redirects to experience admin page.
  */
 function abjs_experience_form_cancel_submit($form, &$form_state) {
-  $form_state['redirect'] = array('admin/config/abjs/configure/experiences/');
+  $form_state['redirect'] = array('admin/config/user-interface/abjs/experiences/');
 }
 
 /**
  * Redirects to experience delete path for this experience.
  */
 function abjs_experience_form_delete_submit($form, &$form_state) {
-  $form_state['redirect'] = array('admin/config/abjs/configure/experiences/' . $form_state['values']['eid'] . '/delete');
+  $form_state['redirect'] = array('admin/config/user-interface/abjs/experiences/' . $form_state['values']['eid'] . '/delete');
 }
 
 /**
@@ -922,7 +922,7 @@ function abjs_experience_delete_confirm_form($form, &$form_state, $eid) {
     $form['name'] = array('#type' => 'value', '#value' => $experience->name);
     return confirm_form($form,
       t('Are you sure you want to delete this experience: %name?', array('%name' => $experience->name)),
-      'admin/config/abjs/configure/experiences',
+      'admin/config/user-interface/abjs/experiences',
       t('This action cannot be undone.'),
       t('Delete'),
       t('Cancel')
@@ -946,5 +946,5 @@ function abjs_experience_delete_confirm_form_submit($form, &$form_state) {
     drupal_set_message(t('Experience "%name" has been deleted.', array('%name' => $form_state['values']['name'])));
   }
 
-  $form_state['redirect'] = 'admin/config/abjs/configure/experiences';
+  $form_state['redirect'] = 'admin/config/user-interface/abjs/experiences';
 }

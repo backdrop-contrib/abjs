@@ -43,25 +43,15 @@ function abjs_menu() {
 
   $items = array();
 
-  $items['admin/config/abjs'] = array(
-    'title' => 'A/B Test via JavaScript Configuration',
-    'description' => 'A/B Test via JavaScript Configuration',
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('administer ab tests'),
-    'position' => 'right',
-    'file' => 'system.admin.inc',
-    'file path' => drupal_get_path('module', 'system'),
-  );
-
-  $items['admin/config/abjs/configure'] = array(
-    'title' => 'A/B Test via JavaScript Configuration',
+  $items['admin/config/user-interface/abjs'] = array(
+    'title' => 'A/B Test via JavaScript',
     'description' => 'Configure settings, tests, conditions, and experiences',
     'page callback' => 'abjs_test_admin',
     'access arguments' => array('administer ab tests'),
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/tests'] = array(
+  $items['admin/config/user-interface/abjs/tests'] = array(
     'title' => 'Tests',
     'description' => 'A/B Tests',
     'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -69,7 +59,7 @@ function abjs_menu() {
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/conditions'] = array(
+  $items['admin/config/user-interface/abjs/conditions'] = array(
     'title' => 'Conditions',
     'description' => 'A/B Test Conditions',
     'page callback' => 'abjs_condition_admin',
@@ -79,7 +69,7 @@ function abjs_menu() {
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/experiences'] = array(
+  $items['admin/config/user-interface/abjs/experiences'] = array(
     'title' => 'Experiences',
     'description' => 'A/B Test Experiences',
     'page callback' => 'abjs_experience_admin',
@@ -89,7 +79,7 @@ function abjs_menu() {
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/settings'] = array(
+  $items['admin/config/user-interface/abjs/settings'] = array(
     'title' => 'Settings',
     'description' => 'A/B Test Settings',
     'page callback' => 'drupal_get_form',
@@ -100,7 +90,7 @@ function abjs_menu() {
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/tests/add'] = array(
+  $items['admin/config/user-interface/abjs/tests/add'] = array(
     'title' => 'Add New Test',
     'description' => 'Add New A/B Test',
     'page callback' => 'drupal_get_form',
@@ -110,7 +100,7 @@ function abjs_menu() {
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/tests/%/edit'] = array(
+  $items['admin/config/user-interface/abjs/tests/%/edit'] = array(
     'title' => 'Edit Test',
     'description' => 'Edit A/B Test',
     'page callback' => 'drupal_get_form',
@@ -120,7 +110,7 @@ function abjs_menu() {
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/tests/%/delete'] = array(
+  $items['admin/config/user-interface/abjs/tests/%/delete'] = array(
     'title' => 'Delete This Test',
     'description' => 'Delete This Test',
     'page callback' => 'drupal_get_form',
@@ -130,7 +120,7 @@ function abjs_menu() {
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/conditions/add'] = array(
+  $items['admin/config/user-interface/abjs/conditions/add'] = array(
     'title' => 'Add New Condition',
     'description' => 'Add New A/B Test Condition',
     'page callback' => 'drupal_get_form',
@@ -140,7 +130,7 @@ function abjs_menu() {
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/conditions/%/edit'] = array(
+  $items['admin/config/user-interface/abjs/conditions/%/edit'] = array(
     'title' => 'Edit Condition',
     'description' => 'Edit A/B Test Condition',
     'page callback' => 'drupal_get_form',
@@ -150,7 +140,7 @@ function abjs_menu() {
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/conditions/%/delete'] = array(
+  $items['admin/config/user-interface/abjs/conditions/%/delete'] = array(
     'title' => 'Delete This Condition',
     'description' => 'Delete This Condition',
     'page callback' => 'drupal_get_form',
@@ -160,7 +150,7 @@ function abjs_menu() {
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/experiences/add'] = array(
+  $items['admin/config/user-interface/abjs/experiences/add'] = array(
     'title' => 'Add New Experience',
     'description' => 'Add New A/B Test Experience',
     'page callback' => 'drupal_get_form',
@@ -170,7 +160,7 @@ function abjs_menu() {
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/experiences/%/edit'] = array(
+  $items['admin/config/user-interface/abjs/experiences/%/edit'] = array(
     'title' => 'Edit Experience',
     'description' => 'Edit A/B Test Experience',
     'page callback' => 'drupal_get_form',
@@ -180,7 +170,7 @@ function abjs_menu() {
     'file' => 'abjs.admin.inc',
   );
 
-  $items['admin/config/abjs/configure/experiences/%/delete'] = array(
+  $items['admin/config/user-interface/abjs/experiences/%/delete'] = array(
     'title' => 'Delete This Experience',
     'description' => 'Delete This Experience',
     'page callback' => 'drupal_get_form',
