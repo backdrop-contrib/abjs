@@ -224,7 +224,7 @@ function abjs_preprocess_html(&$vars) {
   // Outputting javascript inline above other scripts for fastest execution.
   // Group is set to -1000 to output before JS_LIBRARY (which is -100). Note
   // that there are no dependencies for this JavaScript. Use hook_js_alter to
-  // alter loading order. 
+  // alter loading order.
   drupal_add_js($abjs_script, array(
     'type' => 'inline',
     'scope' => 'header',
