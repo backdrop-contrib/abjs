@@ -342,7 +342,7 @@ function abjs_generate_js(array $tests) {
       },
       setCookie: function (sKey, sValue) {
         abKey = cookiePrefix + sKey;
-        document.cookie = encodeURIComponent(abKey) + "=" + encodeURIComponent(sValue) + "; max-age=" + cookieLifetime*24*60*60 + "; domain=" + cookieDomain + "; path=/" + cookieSecure;
+        document.cookie = encodeURIComponent(abKey) + "=" + encodeURIComponent(sValue) + "; max-age=" + cookieLifetime*24*60*60 + cookieDomain + "; path=/" + cookieSecure;
         return true;
       }
     };
