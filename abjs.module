@@ -44,7 +44,7 @@ function abjs_menu() {
   $items = array();
 
   $items['admin/config/user-interface/abjs'] = array(
-    'title' => 'A/B Test via JavaScript',
+    'title' => 'A/B Test JS',
     'description' => 'Configure settings, tests, conditions, and experiences',
     'page callback' => 'abjs_test_admin',
     'access arguments' => array('administer ab tests'),
