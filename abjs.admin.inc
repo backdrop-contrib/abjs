@@ -97,7 +97,7 @@ function abjs_test_admin() {
     $user_created = user_load($test->created_by);
     $user_changed = user_load($test->changed_by);
     $rows[] = array(
-      't_'.$test->tid,
+      't_' . $test->tid,
       l($test->name, '/admin/config/user-interface/abjs/tests/' . $test->tid . '/edit/'),
       $active_array[$test->active],
       $condition_list,
@@ -574,7 +574,7 @@ function abjs_condition_admin() {
     $user_created = user_load($condition->created_by);
     $user_changed = user_load($condition->changed_by);
     $rows[] = array(
-      'c_'.$condition->cid,
+      'c_' . $condition->cid,
       l($condition->name, '/admin/config/user-interface/abjs/conditions/' . $condition->cid . '/edit/'),
       format_date($condition->created),
       theme('username', array('account' => $user_created)),
@@ -771,7 +771,7 @@ function abjs_experience_admin() {
     $user_created = user_load($experience->created_by);
     $user_changed = user_load($experience->changed_by);
     $rows[] = array(
-      'e_'.$experience->eid,
+      'e_' . $experience->eid,
       l($experience->name, '/admin/config/user-interface/abjs/experiences/' . $experience->eid . '/edit/'),
       format_date($experience->created),
       theme('username', array('account' => $user_created)),
