@@ -103,9 +103,9 @@ function abjs_test_admin() {
       $condition_list,
       $experience_list,
       format_date($test->created),
-      $user_created->name,
+      theme('username', array('account' => $user_created)),
       format_date($test->changed),
-      $user_changed->name,
+      theme('username', array('account' => $user_changed)),
     );
   }
   return l(t('Add new test'), '/admin/config/user-interface/abjs/tests/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
@@ -577,9 +577,9 @@ function abjs_condition_admin() {
       'c_'.$condition->cid,
       l($condition->name, '/admin/config/user-interface/abjs/conditions/' . $condition->cid . '/edit/'),
       format_date($condition->created),
-      $user_created->name,
+      theme('username', array('account' => $user_created)),
       format_date($condition->changed),
-      $user_changed->name,
+      theme('username', array('account' => $user_changed)),
     );
   }
   return l(t('Add new condition'), '/admin/config/user-interface/abjs/conditions/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
@@ -774,9 +774,9 @@ function abjs_experience_admin() {
       'e_'.$experience->eid,
       l($experience->name, '/admin/config/user-interface/abjs/experiences/' . $experience->eid . '/edit/'),
       format_date($experience->created),
-      $user_created->name,
+      theme('username', array('account' => $user_created)),
       format_date($experience->changed),
-      $user_changed->name,
+      theme('username', array('account' => $user_changed)),
     );
   }
   return l(t('Add new experience'), '/admin/config/user-interface/abjs/experiences/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
