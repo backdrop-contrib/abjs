@@ -280,7 +280,7 @@ function abjs_generate_js(array $tests) {
     $condition_results = db_query("SELECT tc.tid, tc.cid, c.script FROM {abjs_condition} AS c INNER JOIN {abjs_test_condition} AS tc ON c.cid = tc.cid WHERE tc.tid = :tid", array(':tid' => $tests[$i]->tid));
     $conditions = $condition_results->fetchAll();
     for ($j = 0; $j < count($conditions); $j++) {
-      $con_func_name = "con_{$conditions[$j]->tid}_{$conditions[$j]->cid}";
+      $con_func_name = "t_{$conditions[$j]->tid}_c_{$conditions[$j]->cid}";
       $abjs_script .= "abTests[$i].conditions[$j] = '$con_func_name';\n" .
                       "abConditions.$con_func_name = function(){{$conditions[$j]->script}\n};\n";
     }
@@ -291,7 +291,7 @@ function abjs_generate_js(array $tests) {
     $experience_results = db_query("SELECT te.tid, te.eid, e.script, te.fraction FROM {abjs_experience} AS e INNER JOIN {abjs_test_experience} AS te ON e.eid = te.eid WHERE te.tid = :tid", array(':tid' => $tests[$i]->tid));
     $experiences = $experience_results->fetchAll();
     for ($j = 0; $j < count($experiences); $j++) {
-      $exp_func_name = "exp_{$experiences[$j]->tid}_{$experiences[$j]->eid}";
+      $exp_func_name = "t_{$experiences[$j]->tid}_e_{$experiences[$j]->eid}";
       $abjs_script .= "abTests[$i].experiences[$j] = {};\n" .
                       "abTests[$i].experiences[$j].name = 'e_{$experiences[$j]->eid}';\n" .
                       "abTests[$i].experiences[$j].fraction = {$experiences[$j]->fraction};\n" .

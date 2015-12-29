@@ -81,7 +81,7 @@ function abjs_test_admin() {
     if (!empty($conditions)) {
       $condition_list .= "<ul>";
       foreach ($conditions as $condition) {
-        $condition_list .= '<li>' . l($condition->name . ' (' . $condition->cid . ')', '/admin/config/user-interface/abjs/conditions/' . $condition->cid . '/edit/') . '</li>';
+        $condition_list .= '<li>' . l($condition->name . ' (c_' . $condition->cid . ')', '/admin/config/user-interface/abjs/conditions/' . $condition->cid . '/edit/') . '</li>';
       }
       $condition_list .= "</ul>";
     }
@@ -90,14 +90,14 @@ function abjs_test_admin() {
     if (!empty($experiences)) {
       $experience_list .= "<ul>";
       foreach ($experiences as $experience) {
-        $experience_list .= '<li>' . $experience->fraction . ' ' . l($experience->name . ' (' . $experience->eid . ')', '/admin/config/user-interface/abjs/experiences/' . $experience->eid . '/edit/') . '</li>';
+        $experience_list .= '<li>' . $experience->fraction . ' ' . l($experience->name . ' (e_' . $experience->eid . ')', '/admin/config/user-interface/abjs/experiences/' . $experience->eid . '/edit/') . '</li>';
       }
       $experience_list .= "</ul>";
     }
     $user_created = user_load($test->created_by);
     $user_changed = user_load($test->changed_by);
     $rows[] = array(
-      $test->tid,
+      't_'.$test->tid,
       l($test->name, '/admin/config/user-interface/abjs/tests/' . $test->tid . '/edit/'),
       $active_array[$test->active],
       $condition_list,
@@ -151,7 +151,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   $conditions = db_query("SELECT cid, name FROM {abjs_condition} ORDER BY cid ASC, created DESC");
   $options_array = array(0 => 'Select Condition');
   foreach ($conditions as $condition) {
-    $options_array[$condition->cid] = $condition->name . ' (' . $condition->cid . ')';
+    $options_array[$condition->cid] = $condition->name . ' (c_' . $condition->cid . ')';
   }
 
   // Group conditions together, and allow for adding and removing conditions
@@ -236,7 +236,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   $experiences = db_query("SELECT eid, name FROM {abjs_experience} ORDER BY changed DESC, created DESC");
   $options_array = array(0 => 'Select Experience');
   foreach ($experiences as $experience) {
-    $options_array[$experience->eid] = $experience->name . ' (' . $experience->eid . ')';
+    $options_array[$experience->eid] = $experience->name . ' (e_' . $experience->eid . ')';
   }
 
   // Group experiences together, and allow for adding and removing experiences
@@ -574,7 +574,7 @@ function abjs_condition_admin() {
     $user_created = user_load($condition->created_by);
     $user_changed = user_load($condition->changed_by);
     $rows[] = array(
-      $condition->cid,
+      'c_'.$condition->cid,
       l($condition->name, '/admin/config/user-interface/abjs/conditions/' . $condition->cid . '/edit/'),
       format_date($condition->created),
       $user_created->name,
@@ -771,7 +771,7 @@ function abjs_experience_admin() {
     $user_created = user_load($experience->created_by);
     $user_changed = user_load($experience->changed_by);
     $rows[] = array(
-      $experience->eid,
+      'e_'.$experience->eid,
       l($experience->name, '/admin/config/user-interface/abjs/experiences/' . $experience->eid . '/edit/'),
       format_date($experience->created),
       $user_created->name,
