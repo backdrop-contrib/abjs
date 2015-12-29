@@ -62,18 +62,18 @@ function abjs_settings_admin($form, &$form_state) {
  */
 function abjs_test_admin() {
   $header = array(
-    'ID',
-    'Name',
-    'Status',
-    'Conditions',
-    'Experiences',
-    'Created',
-    'Created By',
-    'Changed',
-    'Changed By',
+    t('ID'),
+    t('Name'),
+    t('Status'),
+    t('Conditions'),
+    t('Experiences'),
+    t('Created'),
+    t('Created By'),
+    t('Changed'),
+    t('Changed By'),
   );
   $rows = array();
-  $active_array = array('Inactive', 'Active');
+  $active_array = array(t('Inactive'), t('Active'));
   $tests = db_query("SELECT * FROM {abjs_test} ORDER BY active DESC, changed DESC, created DESC");
   foreach ($tests as $test) {
     $condition_list = "";
@@ -560,12 +560,12 @@ function abjs_test_delete_confirm_form_submit($form, &$form_state) {
  */
 function abjs_condition_admin() {
   $header = array(
-    'ID',
-    'Name',
-    'Created',
-    'Created By',
-    'Changed',
-    'Changed By',
+    t('ID'),
+    t('Name'),
+    t('Created'),
+    t('Created By'),
+    t('Changed'),
+    t('Changed By'),
   );
   $rows = array();
 
@@ -757,12 +757,12 @@ function abjs_condition_delete_confirm_form_submit($form, &$form_state) {
  */
 function abjs_experience_admin() {
   $header = array(
-    'ID',
-    'Name',
-    'Created',
-    'Created By',
-    'Changed',
-    'Changed By',
+    t('ID'),
+    t('Name'),
+    t('Created'),
+    t('Created By'),
+    t('Changed'),
+    t('Changed By'),
   );
   $rows = array();
 
