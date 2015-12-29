@@ -480,7 +480,7 @@ function abjs_test_form_save_submit($form, &$form_state) {
     }
   }
   foreach ($form_state['values']['experiences_fieldset'] as $fieldset) {
-    if ($fieldset['experience'] > 0) {
+    if (isset($fieldset['experience']) && $fieldset['experience'] > 0) {
       db_merge('abjs_test_experience')
         ->key(array(
           'tid' => $tid,
