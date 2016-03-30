@@ -655,7 +655,7 @@ function abjs_condition_form($form, &$form_state, $cid = NULL) {
       'scope' => 'header',
       'group' => JS_LIBRARY,
     ));
-    drupal_add_js(drupal_get_path('module', 'abjs') . '/abjs-ace-edit.js');
+    drupal_add_js(drupal_get_path('module', 'abjs') . '/js/abjs-ace-edit.js');
   }
 
   return $form;
@@ -853,7 +853,7 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
       'scope' => 'header',
       'group' => JS_LIBRARY,
     ));
-    drupal_add_js(drupal_get_path('module', 'abjs') . '/abjs-ace-edit.js', array(
+    drupal_add_js(drupal_get_path('module', 'abjs') . '/js/abjs-ace-edit.js', array(
       'type' => 'file',
       'scope' => 'footer',
       'group' => JS_THEME,

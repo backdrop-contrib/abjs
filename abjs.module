@@ -267,22 +267,29 @@ function abjs_generate_js(array $tests) {
   if (empty($tests)) {
     return '';
   }
-  $abjs_script = "(function(){var abTests = [], abConditions = {}, abExperiences={};\n";
+  
+  $tests_js = array();
+  
+  //These arrays are used for passing functions through json without quotes 
+  $json_functions = array();
+  $json_function_keys = array();
+  
   for ($i = 0; $i < count($tests); $i++) {
     // Set name of this test to the tid.
-    $abjs_script .= "abTests[$i] = {};\n" .
-                    "abTests[$i].name = 't_{$tests[$i]->tid}';\n" .
-                    "abTests[$i].conditions = [];\n" .
-                    "abTests[$i].experiences = [];\n";
+    $tests_js[$i] = array(
+      'name' => "t_{$tests[$i]->tid}",
+      'conditions' => array(),
+      'experiences' => array(),
+    );
 
     // Get all conditions associated with this test,and make functions for the
     // scripts.
     $condition_results = db_query("SELECT tc.tid, tc.cid, c.script FROM {abjs_condition} AS c INNER JOIN {abjs_test_condition} AS tc ON c.cid = tc.cid WHERE tc.tid = :tid", array(':tid' => $tests[$i]->tid));
     $conditions = $condition_results->fetchAll();
     for ($j = 0; $j < count($conditions); $j++) {
-      $con_func_name = "t_{$conditions[$j]->tid}_c_{$conditions[$j]->cid}";
-      $abjs_script .= "abTests[$i].conditions[$j] = '$con_func_name';\n" .
-                      "abConditions.$con_func_name = function(){{$conditions[$j]->script}\n};\n";
+      $tests_js[$i]['conditions'][$j] = "%%test $i condition $j%%";
+      $json_function_keys[] = '"' . $tests_js[$i]['conditions'][$j] . '"';
+      $json_functions[] = "function(){{$conditions[$j]->script}\n}";
     }
 
     // Get all experiences associated with this test and their fractions, make
@@ -291,23 +298,17 @@ function abjs_generate_js(array $tests) {
     $experience_results = db_query("SELECT te.tid, te.eid, e.script, te.fraction FROM {abjs_experience} AS e INNER JOIN {abjs_test_experience} AS te ON e.eid = te.eid WHERE te.tid = :tid", array(':tid' => $tests[$i]->tid));
     $experiences = $experience_results->fetchAll();
     for ($j = 0; $j < count($experiences); $j++) {
-      $exp_func_name = "t_{$experiences[$j]->tid}_e_{$experiences[$j]->eid}";
-      $abjs_script .= "abTests[$i].experiences[$j] = {};\n" .
-                      "abTests[$i].experiences[$j].name = 'e_{$experiences[$j]->eid}';\n" .
-                      "abTests[$i].experiences[$j].fraction = {$experiences[$j]->fraction};\n" .
-                      "abTests[$i].experiences[$j].script = '$exp_func_name';\n" .
-                      "abExperiences.$exp_func_name = function(){{$experiences[$j]->script}\n};\n";
+      $tests_js[$i]['experiences'][$j] = array(
+        'name' => "e_{$experiences[$j]->eid}",
+        'fraction' => "%%test $i experience $j fraction%%",
+        'script' => "%%test $i experience $j script%%",
+      );
+      $json_function_keys[] = '"' . $tests_js[$i]['experiences'][$j]['script'] . '"';
+      $json_functions[] = "function(){{$experiences[$j]->script}\n}";
+      $json_function_keys[] = '"' . $tests_js[$i]['experiences'][$j]['fraction'] . '"';
+      $json_functions[] = $experiences[$j]->fraction;
     }
   }
-
-  // The following is the core functionality of the A/B testing javascript
-  // framework. Visitors that pass the assigned condition scripts for each test
-  // will be randomly placed and cookied into an experience for that test,
-  // based on assigned probabilities for each experience. Each experience has
-  // an associated script that is run for that experience, and all applicable
-  // experience scripts are executed for each visitor on every page load, in
-  // the order in which the tests are defined. The user will have one cookie
-  // for each active test.
   // These are the only php variables referenced in the script below.
   $cookie_prefix_var = variable_get('abjs_cookie_prefix');
   $cookie_lifetime_var = variable_get('abjs_cookie_lifetime');
@@ -315,93 +316,35 @@ function abjs_generate_js(array $tests) {
   $cookie_secure_var = variable_get('abjs_cookie_secure');
   $cookie_prefix = !empty($cookie_prefix_var) ? $cookie_prefix_var : 'abjs_';
   $cookie_lifetime = !empty($cookie_lifetime_var) ? $cookie_lifetime_var : '30';
+  $cookie_lifetime = floatval($cookie_lifetime);
   $cookie_domain = !empty($cookie_domain_var) ? '; domain=' . $cookie_domain_var : '';
   $cookie_secure = !empty($cookie_secure_var) ? '; secure' : '';
 
-  $abjs_script .= <<<EOD
-    //--------------------Cookie functions-------------------------------------//
-    var cookiePrefix = "$cookie_prefix";
-    var cookieDomain = "$cookie_domain";
-    var cookieLifetime = $cookie_lifetime; //days
-    var cookieSecure = "$cookie_secure";
-    var abCookies = {
-      getCookie: function (sKey) {
-        if (!sKey) { return null; }
-        abKey = cookiePrefix + sKey;
-        return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\\\s*" + encodeURIComponent(abKey).replace(/[\\-\\.\\+\\*]/g, "\\\\\$&") + "\\\\s*\\\\=\\\\s*([^;]*).*\$)|^.*\$"), "\$1")) || null;
-      },
-      setCookie: function (sKey, sValue) {
-        abKey = cookiePrefix + sKey;
-        document.cookie = encodeURIComponent(abKey) + "=" + encodeURIComponent(sValue) + "; max-age=" + cookieLifetime*24*60*60 + cookieDomain + "; path=/" + cookieSecure;
-        return true;
-      }
-    };
+  $js_vars = array(
+    'tests' => $tests_js,
+    'cookiePrefix' => $cookie_prefix,
+    'cookieDomain' => $cookie_domain,
+    'cookieLifetime' => $cookie_lifetime,
+    'cookieSecure' => $cookie_secure,
+  );
+  $json = json_encode($js_vars);
+  $json = str_replace($json_function_keys, $json_functions, $json);
 
-    //--------------------End Cookie functions-------------------------------------//
+  //Now convert the js functions from strings into js functions:
 
 
-    //--------Core functionality: determine scripts to run and set cookies---------//
 
-    var userExperiences = []; //this holds all of the scripts to be run for this user.
+  // abjs-common.js is the core functionality of the A/B testing javascript
+  // framework. Visitors that pass the assigned condition scripts for each test
+  // will be randomly placed and cookied into an experience for that test,
+  // based on assigned probabilities for each experience. Each experience has
+  // an associated script that is run for that experience, and all applicable
+  // experience scripts are executed for each visitor on every page load, in
+  // the order in which the tests are defined. The user will have one cookie
+  // for each active test.
+  $common_js = file_get_contents(drupal_get_path('module', 'abjs').'/js/abjs-common.js');
 
-    //Filter out the tests where any of the conditions of the test don't pass. All conditions must pass for the test to be applied.
-    var filteredTests = [];
-    for(var i = 0; i < abTests.length; i++){
-      for(var j = 0; j < abTests[i].conditions.length; j++){
-        var funcString = abTests[i].conditions[j];
-        if(typeof abConditions[funcString] !== 'function' || !abConditions[funcString]()) {
-          break;
-        }
-      }
-      if(j == abTests[i].conditions.length){ //this means we've passed all the conditions for this test
-        filteredTests.push(abTests[i]);
-      }
-    }
-
-    /*
-    Loop through each test.
-
-    If this user has a cookie for the test, then add the experience
-    script to userExperiences.
-
-    If there is no cookie, then generate a random number to determine
-    what experience the user should be in, if any. If the user enters an experience,
-    cookie that experience, and add the experience script to userExperiences
-    */
-    for(var i = 0; i < filteredTests.length; i++){
-      if(abCookies.getCookie(filteredTests[i].name)){
-        for(var j = 0; j < filteredTests[i].experiences.length; j++){
-          if(abCookies.getCookie(filteredTests[i].name) == filteredTests[i].experiences[j].name){
-            userExperiences.push(filteredTests[i].experiences[j].script);
-            break;
-          }
-        }
-      }
-      else{
-        var randomNum = Math.random();
-        var fractionSum = 0;
-        for(var j = 0; j < filteredTests[i].experiences.length; j++){
-          if(randomNum >= fractionSum && randomNum < fractionSum + filteredTests[i].experiences[j].fraction){
-            abCookies.setCookie(filteredTests[i].name,filteredTests[i].experiences[j].name);
-            userExperiences.push(filteredTests[i].experiences[j].script);
-            break;
-          }
-          fractionSum += filteredTests[i].experiences[j].fraction;
-        }
-      }
-    }
-
-
-    //execute all the scripts for all the experiences the user is in
-    for(var i = 0; i < userExperiences.length; i++){
-      var funcString = userExperiences[i];
-      if(typeof abExperiences[funcString] === 'function') {
-        abExperiences[funcString]();
-      }
-    }
-
-    })();
-EOD;
+  $abjs_script = "(function() {var abjs = $json;\n$common_js})();";
 
   return $abjs_script;
 }
