@@ -8,26 +8,26 @@
 
 var abCookies = {
   getCookie: function (sKey) {
-    "use strict";
+    'use strict';
     if (!sKey) {
       return null;
     }
     var abKey = abjs.cookiePrefix + sKey;
-    return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(abKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+    return decodeURIComponent(document.cookie.replace(new RegExp('(?:(?:^|.*;)\\s*' + encodeURIComponent(abKey).replace(/[\-\.\+\*]/g, '\\$&') + '\\s*\\=\\s*([^;]*).*$)|^.*$'), '$1')) || null;
   },
   setCookie: function (sKey, sValue) {
-    "use strict";
+    'use strict';
     var abKey = abjs.cookiePrefix + sKey;
-    document.cookie = encodeURIComponent(abKey) + "=" + encodeURIComponent(sValue) + "; max-age=" + abjs.cookieLifetime * 24 * 60 * 60 + abjs.cookieDomain + "; path=/" + abjs.cookieSecure;
+    document.cookie = encodeURIComponent(abKey) + '=' + encodeURIComponent(sValue) + '; max-age=' + abjs.cookieLifetime * 24 * 60 * 60 + abjs.cookieDomain + '; path=/' + abjs.cookieSecure;
     return true;
   }
 };
 
-var i, j;
+var i;
+var j;
 
 for (i = abjs.tests.length - 1; i >= 0; i--) {
   for (j = 0; j < abjs.tests[i].conditions.length; j++) {
-    var funcString = abjs.tests[i].conditions[j];
     if (!abjs.tests[i].conditions[j]()) {
       break;
     }
@@ -50,7 +50,7 @@ for (i = 0; i < abjs.tests.length; i++) {
     var fractionSum = 0;
     for (j = 0; j < abjs.tests[i].experiences.length; j++) {
       if (randomNum >= fractionSum && randomNum < fractionSum + abjs.tests[i].experiences[j].fraction) {
-        abCookies.setCookie(abjs.tests[i].name,abjs.tests[i].experiences[j].name);
+        abCookies.setCookie(abjs.tests[i].name, abjs.tests[i].experiences[j].name);
         abjs.tests[i].activeExperience = j;
         break;
       }
