@@ -190,7 +190,7 @@ function abjs_menu() {
  * scripts via drupal_add_js.
  */
 function abjs_preprocess_html(&$vars) {
-  if (preg_match('/^admin\//', request_path())) {
+  if (path_is_admin(current_path())) {
     return;
   }
 
