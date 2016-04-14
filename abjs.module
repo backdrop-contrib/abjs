@@ -267,9 +267,9 @@ function abjs_generate_js(array $tests) {
   if (empty($tests)) {
     return '';
   }
-  
+
   $tests_js = array();
-  
+
   // The following arrays are used because json values cannot be functions.
   // Each element of the $json_function_keys array is a unique string
   // placeholder for a javascript function, which is stored in the
@@ -278,7 +278,7 @@ function abjs_generate_js(array $tests) {
   // after json_encoding.
   $json_functions = array();
   $json_function_keys = array();
-  
+
   for ($i = 0; $i < count($tests); $i++) {
     // Set name of this test to the tid.
     $tests_js[$i] = array(
@@ -344,7 +344,7 @@ function abjs_generate_js(array $tests) {
   // experience scripts are executed for each visitor on every page load, in
   // the order in which the tests are defined. The user will have one cookie
   // for each active test.
-  $common_js = file_get_contents(drupal_get_path('module', 'abjs').'/js/abjs-common.js');
+  $common_js = file_get_contents(drupal_get_path('module', 'abjs') . '/js/abjs-common.js');
 
   $abjs_script = "(function() {var abjs = $json;\n$common_js})();";
 

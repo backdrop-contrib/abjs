@@ -436,7 +436,8 @@ function abjs_test_form_save_submit($form, &$form_state) {
         'active' => $form_state['values']['active'],
         'changed' => REQUEST_TIME,
         'changed_by' => $user->uid,
-    ))->condition('tid', $tid, '=')
+      ))
+      ->condition('tid', $tid, '=')
       ->execute();
 
     // Delete all entries in the test-condition and test-experience tables to
@@ -458,7 +459,8 @@ function abjs_test_form_save_submit($form, &$form_state) {
         'created_by' => $user->uid,
         'changed' => REQUEST_TIME,
         'changed_by' => $user->uid,
-      ))->execute();
+      ))
+      ->execute();
   }
 
   // Whether new or existing test, insert conditions and experiences for this
@@ -473,10 +475,12 @@ function abjs_test_form_save_submit($form, &$form_state) {
         ->key(array(
           'tid' => $tid,
           'cid' => $cid,
-      ))->fields(array(
+        ))
+        ->fields(array(
           'tid' => $tid,
           'cid' => $cid,
-      ))->execute();
+        ))
+        ->execute();
     }
   }
   foreach ($form_state['values']['experiences_fieldset'] as $fieldset) {
@@ -485,11 +489,13 @@ function abjs_test_form_save_submit($form, &$form_state) {
         ->key(array(
           'tid' => $tid,
           'eid' => $fieldset['experience'],
-      ))->fields(array(
-          'tid' => $tid,
-          'eid' => $fieldset['experience'],
-          'fraction' => $fieldset['experience_fraction'],
-      ))->execute();
+        ))
+        ->fields(array(
+        'tid' => $tid,
+        'eid' => $fieldset['experience'],
+        'fraction' => $fieldset['experience_fraction'],
+        ))
+        ->execute();
     }
   }
   $msg = !empty($form_state['values']['tid']) ? t("Successfully updated test") : t("Successfully saved new test");
@@ -890,7 +896,8 @@ function abjs_experience_form_save_submit($form, &$form_state) {
         'created_by' => $user->uid,
         'changed' => REQUEST_TIME,
         'changed_by' => $user->uid,
-      ))->execute();
+      ))
+      ->execute();
     drupal_set_message(t("Successfully saved new experience"));
   }
   drupal_goto('/admin/config/user-interface/abjs/experiences');
