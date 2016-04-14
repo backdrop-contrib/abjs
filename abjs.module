@@ -346,7 +346,7 @@ function abjs_generate_js(array $tests) {
   // for each active test.
   $common_js = file_get_contents(drupal_get_path('module', 'abjs') . '/js/abjs-common.js');
 
-  $abjs_script = "(function() {var abjs = $json;\n$common_js})();";
+  $abjs_script = "'use strict'; (function() {var abjs = $json;\n$common_js})();";
 
   return $abjs_script;
 }
