@@ -53,7 +53,7 @@ for (var i = 0; i < abjs.tests.length; i++) {
     }
   }
 }
-for (var i = 0; i <abjs.tests.length; i++) {
+for (var i = 0; i < abjs.tests.length; i++) {
   if (typeof abjs.tests[i].activeExperience !== 'undefined') {
     abjs.tests[i].experiences[abjs.tests[i].activeExperience].script();
   }
