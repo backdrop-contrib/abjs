@@ -348,6 +348,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     '#type' => 'submit',
     '#value' => t('Save'),
     '#weight' => 5,
+    '#validate' => array('abjs_test_form_save_validate'),
     '#submit' => array('abjs_test_form_save_submit'),
   );
 
@@ -423,7 +424,18 @@ function abjs_ajax_remove_experience($form, &$form_state) {
 }
 
 /**
- * Save function for new and edited tests. Check for new vs edit by using tid.
+ * Validation function for new and edited tests.
+ */
+function abjs_test_form_save_validate($form, &$form_state) {
+  for ($i = 0; $i < count($form_state['values']['experiences_fieldset']) - 2; $i++) {
+    if (!preg_match('#^[0-9./]+$#', $form_state['values']['experiences_fieldset'][$i]['experience_fraction'])) {
+      form_set_error("experiences_fieldset][$i][experience_fraction", t('Invalid character used in Experience @i Fraction. Only numbers, decimals, and slashes are allowed. Other characters, inlcuding spaces, are not allowed.', array('@i' => $i + 1)));
+    }
+  }
+}
+
+/**
+ * Save function for new and edited tests. Check for new vs. edit by using tid.
  */
 function abjs_test_form_save_submit($form, &$form_state) {
   global $user;
