@@ -25,6 +25,7 @@ var abCookies = {
 
 var i;
 var j;
+var fracArray;
 
 for (i = abjs.tests.length - 1; i >= 0; i--) {
   for (j = 0; j < abjs.tests[i].conditions.length; j++) {
@@ -32,7 +33,11 @@ for (i = abjs.tests.length - 1; i >= 0; i--) {
   }
   for (j = 0; j < abjs.tests[i].experiences.length; j++) {
     abjs.tests[i].experiences[j].script = new Function(abjs.tests[i].experiences[j].script + '\r\n');
-    abjs.tests[i].experiences[j].fraction = eval(abjs.tests[i].experiences[j].fraction);
+    if (abjs.tests[i].experiences[j].fraction.match('/')) {
+      fracArray = abjs.tests[i].experiences[j].fraction.split('/');
+      abjs.tests[i].experiences[j].fraction = fracArray[0] / fracArray[1];
+    }
+    abjs.tests[i].experiences[j].fraction = isNaN(1 * abjs.tests[i].experiences[j].fraction) ? 0 : 1 * abjs.tests[i].experiences[j].fraction;
   }
 }
 
