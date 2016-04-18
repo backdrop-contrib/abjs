@@ -28,6 +28,16 @@ var j;
 
 for (i = abjs.tests.length - 1; i >= 0; i--) {
   for (j = 0; j < abjs.tests[i].conditions.length; j++) {
+    abjs.tests[i].conditions[j] = new Function(abjs.tests[i].conditions[j] + '\r\n');
+  }
+  for (j = 0; j < abjs.tests[i].experiences.length; j++) {
+    abjs.tests[i].experiences[j].script = new Function(abjs.tests[i].experiences[j].script + '\r\n');
+    abjs.tests[i].experiences[j].fraction = eval(abjs.tests[i].experiences[j].fraction);
+  }
+}
+
+for (i = abjs.tests.length - 1; i >= 0; i--) {
+  for (j = 0; j < abjs.tests[i].conditions.length; j++) {
     if (!abjs.tests[i].conditions[j]()) {
       break;
     }

@@ -270,15 +270,6 @@ function abjs_generate_js(array $tests) {
 
   $tests_js = array();
 
-  // The following arrays are used because json values cannot be functions.
-  // Each element of the $json_function_keys array is a unique string
-  // placeholder for a javascript function, which is stored in the
-  // corresponding element of the $json_functions array. The string placeholders
-  // are entered into the $tests_js array, and are replaced by the functions
-  // after json_encoding.
-  $json_functions = array();
-  $json_function_keys = array();
-
   for ($i = 0; $i < count($tests); $i++) {
     // Set name of this test to the tid.
     $tests_js[$i] = array(
@@ -292,9 +283,7 @@ function abjs_generate_js(array $tests) {
     $condition_results = db_query("SELECT tc.tid, tc.cid, c.script FROM {abjs_condition} AS c INNER JOIN {abjs_test_condition} AS tc ON c.cid = tc.cid WHERE tc.tid = :tid", array(':tid' => $tests[$i]->tid));
     $conditions = $condition_results->fetchAll();
     for ($j = 0; $j < count($conditions); $j++) {
-      $tests_js[$i]['conditions'][$j] = "%%test $i condition $j%%";
-      $json_function_keys[] = '"' . $tests_js[$i]['conditions'][$j] . '"';
-      $json_functions[] = "function(){{$conditions[$j]->script}\n}";
+      $tests_js[$i]['conditions'][$j] = $conditions[$j]->script;
     }
 
     // Get all experiences associated with this test and their fractions, make
@@ -305,13 +294,9 @@ function abjs_generate_js(array $tests) {
     for ($j = 0; $j < count($experiences); $j++) {
       $tests_js[$i]['experiences'][$j] = array(
         'name' => "e_{$experiences[$j]->eid}",
-        'fraction' => "%%test $i experience $j fraction%%",
-        'script' => "%%test $i experience $j script%%",
+        'fraction' => $experiences[$j]->fraction,
+        'script' => $experiences[$j]->script,
       );
-      $json_function_keys[] = '"' . $tests_js[$i]['experiences'][$j]['script'] . '"';
-      $json_functions[] = "function(){{$experiences[$j]->script}\n}";
-      $json_function_keys[] = '"' . $tests_js[$i]['experiences'][$j]['fraction'] . '"';
-      $json_functions[] = $experiences[$j]->fraction;
     }
   }
 
@@ -334,7 +319,6 @@ function abjs_generate_js(array $tests) {
     'cookieSecure' => $cookie_secure,
   );
   $json = json_encode($js_vars);
-  $json = str_replace($json_function_keys, $json_functions, $json);
 
   // abjs-common.js is the core functionality of the A/B testing javascript
   // framework. Visitors that pass the assigned condition scripts for each test
