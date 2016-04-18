@@ -429,7 +429,7 @@ function abjs_ajax_remove_experience($form, &$form_state) {
 function abjs_test_form_save_validate($form, &$form_state) {
   for ($i = 0; $i < count($form_state['values']['experiences_fieldset']) - 2; $i++) {
     if (!preg_match('#^[0-9./]+$#', $form_state['values']['experiences_fieldset'][$i]['experience_fraction'])) {
-      form_set_error("experiences_fieldset][$i][experience_fraction", t('Invalid character used in Experience @i Fraction. Only numbers, decimals, and slashes are allowed. Other characters, inlcuding spaces, are not allowed.', array('@i' => $i + 1)));
+      form_set_error("experiences_fieldset][$i][experience_fraction", t('Invalid character used in Experience @i Fraction. Only numbers, decimals, and slashes are allowed. Other characters, including spaces, are not allowed.', array('@i' => $i + 1)));
     }
   }
 }
