@@ -512,7 +512,7 @@ function abjs_test_form_save_submit($form, &$form_state) {
   }
   $msg = !empty($form_state['values']['tid']) ? t("Successfully updated test") : t("Successfully saved new test");
   drupal_set_message($msg);
-  drupal_goto('/admin/config/user-interface/abjs/tests');
+  $form_state['redirect'] = array('/admin/config/user-interface/abjs/tests');
 }
 
 /**
@@ -712,7 +712,7 @@ function abjs_condition_form_save_submit($form, &$form_state) {
     drupal_set_message(t("Successfully saved new condition"));
 
   }
-  drupal_goto('/admin/config/user-interface/abjs/conditions');
+  $form_state['redirect'] = array('/admin/config/user-interface/abjs/conditions');
 }
 
 /**
@@ -912,7 +912,7 @@ function abjs_experience_form_save_submit($form, &$form_state) {
       ->execute();
     drupal_set_message(t("Successfully saved new experience"));
   }
-  drupal_goto('/admin/config/user-interface/abjs/experiences');
+  $form_state['redirect'] = array('/admin/config/user-interface/abjs/experiences');
 }
 
 /**
