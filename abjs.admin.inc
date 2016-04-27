@@ -149,7 +149,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
 
   // Make select list of conditions.
   $conditions = db_query("SELECT cid, name FROM {abjs_condition} ORDER BY cid ASC, created DESC");
-  $options_array = array(0 => 'Select Condition');
+  $options_array = array(0 => t('Select Condition'));
   foreach ($conditions as $condition) {
     $options_array[$condition->cid] = $condition->name . ' (c_' . $condition->cid . ')';
   }
@@ -234,7 +234,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
   // Now do the same for experiences.
   // Make select list of experiences.
   $experiences = db_query("SELECT eid, name FROM {abjs_experience} ORDER BY changed DESC, created DESC");
-  $options_array = array(0 => 'Select Experience');
+  $options_array = array(0 => t('Select Experience'));
   foreach ($experiences as $experience) {
     $options_array[$experience->eid] = $experience->name . ' (e_' . $experience->eid . ')';
   }
@@ -638,7 +638,7 @@ function abjs_condition_form($form, &$form_state, $cid = NULL) {
     '#type' => 'textarea',
     '#title' => t('Condition Script'),
     '#default_value' => $condition_script_default,
-    '#attributes' => array('placeholder' => array("EXAMPLE: return window.location.pathname == '/'")),
+    '#attributes' => array('placeholder' => array(t('EXAMPLE').': return window.location.pathname == "/";')),
     '#description' => t('Any valid javascript with a return statement at the end, returning true or false. Read the documentation for examples'),
     '#rows' => 3,
     '#required' => TRUE,
@@ -836,7 +836,7 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
     '#type' => 'textarea',
     '#title' => t('Experience Script'),
     '#default_value' => $experience_script_default,
-    '#attributes' => array('placeholder' => array('EXAMPLE: document.write("<style>.sign-up-button { display:none !important; }</style>");')),
+    '#attributes' => array('placeholder' => array(t('EXAMPLE').': document.write("<style>.sign-up-button { display:none !important; }</style>");')),
     '#description' => t('Any valid javascript to load in head. Leave empty for a Control. Read the documentation for more examples.'),
     '#rows' => 3,
   );
