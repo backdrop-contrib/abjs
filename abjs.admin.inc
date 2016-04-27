@@ -511,7 +511,7 @@ function abjs_test_form_save_submit($form, &$form_state) {
     }
   }
   $msg = !empty($form_state['values']['tid']) ? t("Successfully updated test") : t("Successfully saved new test");
-  drupal_set_message(check_plain($msg));
+  drupal_set_message($msg);
   drupal_goto('/admin/config/user-interface/abjs/tests');
 }
 
