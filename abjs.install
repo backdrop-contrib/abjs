@@ -25,7 +25,7 @@ function abjs_install() {
  * Implements hook_schema().
  */
 function abjs_schema() {
-  $schema = [];
+  $schema = array();
   $schema['abjs_test'] = array(
     'description' => 'The table for a/b tests.',
     'fields' => array(
