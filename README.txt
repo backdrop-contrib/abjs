@@ -18,7 +18,7 @@ focused more on flexibility and power and less on allowing non-technical folks
 to setup tests.
 
  * For a full description of the module, visit the project page:
-   https://www.drupal.org/sandbox/mmowers/2601142
+   https://www.drupal.org/project/abjs
 
  * To submit bug reports and feature suggestions, or to track changes:
    https://www.drupal.org/project/issues/2601142
