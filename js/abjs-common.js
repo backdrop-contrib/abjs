@@ -27,7 +27,7 @@ var i;
 var j;
 var fracArray;
 
-for (i = abjs.tests.length - 1; i >= 0; i--) {
+for (i = 0; i < abjs.tests.length; i++) {
   for (j = 0; j < abjs.tests[i].conditions.length; j++) {
     abjs.tests[i].conditions[j] = new Function(abjs.tests[i].conditions[j] + '\r\n');
   }
@@ -41,7 +41,7 @@ for (i = abjs.tests.length - 1; i >= 0; i--) {
   }
 }
 
-for (i = abjs.tests.length - 1; i >= 0; i--) {
+for (i = 0; i < abjs.tests.length; i++) {
   for (j = 0; j < abjs.tests[i].conditions.length; j++) {
     if (!abjs.tests[i].conditions[j]()) {
       break;
