@@ -639,7 +639,7 @@ function abjs_condition_form($form, &$form_state, $cid = NULL) {
     '#title' => t('Condition Script'),
     '#default_value' => $condition_script_default,
     '#attributes' => array('placeholder' => array(t('EXAMPLE').': return window.location.pathname == "/";')),
-    '#description' => t('Any valid javascript with a return statement at the end, returning true or false. Read the documentation for examples'),
+    '#description' => t('Any valid javascript with a return statement at the end, returning true or false. Read the <a href="@documentation">documentation</a> for examples', array('@documentation' => 'https://www.drupal.org/node/2716391#example-conditions')),
     '#rows' => 3,
     '#required' => TRUE,
   );
@@ -837,7 +837,7 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
     '#title' => t('Experience Script'),
     '#default_value' => $experience_script_default,
     '#attributes' => array('placeholder' => array(t('EXAMPLE').': document.write("<style>.sign-up-button { display:none !important; }</style>");')),
-    '#description' => t('Any valid javascript to load in head. Leave empty for a Control. Read the documentation for more examples.'),
+    '#description' => t('Any valid javascript to load in head. Leave empty for a Control. Read the <a href="@documentation">documentation</a> for examples', array('@documentation' => 'https://www.drupal.org/node/2716391#example-experiences')),
     '#rows' => 3,
   );
 

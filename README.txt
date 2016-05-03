@@ -17,8 +17,12 @@ lightweight JS script. It is similar to Optimizely and Adobe Test&Target, but
 focused more on flexibility and power and less on allowing non-technical folks
 to setup tests.
 
- * For a full description of the module, visit the project page:
+ * The project page is here:
    https://www.drupal.org/project/abjs
+   
+ * For a full description of the module and instructions on how to use, visit
+   the documentation page:
+   https://www.drupal.org/node/2716391
 
  * To submit bug reports and feature suggestions, or to track changes:
    https://www.drupal.org/project/issues/2601142

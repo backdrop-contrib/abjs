@@ -12,8 +12,8 @@ function abjs_help($path, $arg) {
   switch ($path) {
     case 'admin/help#abjs':
       $output = <<<EOD
-<h2>Documentation</h2>
-<p>See <a href="https://www.drupal.org/project/abjs">Drupal Documentation</a></p>
+<h2>Documentation:</h2>
+<p>See <a href="https://www.drupal.org/node/2716391">Module Documentation</a></p>
 EOD;
       return $output;
   }
