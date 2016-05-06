@@ -6,6 +6,7 @@
  * script along with the dynamic tests, experiences, and conditions.
  */
 
+//cookie functions for getting and setting abjs cookies
 var abCookies = {
   getCookie: function (sKey) {
     'use strict';
@@ -27,6 +28,8 @@ var i;
 var j;
 var fracArray;
 
+//convert condition and experience function strings into real functions,
+//and convert experience fraction strings into numbers.
 for (i = 0; i < abjs.tests.length; i++) {
   for (j = 0; j < abjs.tests[i].conditions.length; j++) {
     abjs.tests[i].conditions[j] = new Function(abjs.tests[i].conditions[j] + '\r\n');
@@ -41,17 +44,24 @@ for (i = 0; i < abjs.tests.length; i++) {
   }
 }
 
+//First, for each test, check if all conditions evaluate to true. If any
+//condition evaluates to false, remove that test from the abjs.tests array.
 for (i = 0; i < abjs.tests.length; i++) {
   for (j = 0; j < abjs.tests[i].conditions.length; j++) {
     if (!abjs.tests[i].conditions[j]()) {
+      abjs.tests.splice(i, 1);
+      i--;
       break;
     }
   }
-  if (j !== abjs.tests[i].conditions.length) {
-    abjs.tests.splice(i, 1);
-  }
 }
+
+//For each test that passses all conditions, determine the experience for this
+//user.
 for (i = 0; i < abjs.tests.length; i++) {
+  //First, check if a cookie exists for this test by checking the cookie's name.
+  //If so, the value of the cookie is the index of the experience that this
+  //user should have.
   if (abCookies.getCookie(abjs.tests[i].name)) {
     for (j = 0; j < abjs.tests[i].experiences.length; j++) {
       if (abCookies.getCookie(abjs.tests[i].name) === abjs.tests[i].experiences[j].name) {
@@ -60,6 +70,10 @@ for (i = 0; i < abjs.tests.length; i++) {
       }
     }
   }
+  //If a cookie does not yet exist for this test, generate a random number to
+  //determine what experience this user should have by comparing the random
+  //number to the fractions assigned for each experience. Set a cookie for this
+  //test and experience.
   else {
     var randomNum = Math.random();
     var fractionSum = 0;
@@ -73,6 +87,8 @@ for (i = 0; i < abjs.tests.length; i++) {
     }
   }
 }
+
+//Run all experience scripts for this user.
 for (i = 0; i < abjs.tests.length; i++) {
   if (typeof abjs.tests[i].activeExperience !== 'undefined') {
     abjs.tests[i].experiences[abjs.tests[i].activeExperience].script();
