@@ -194,7 +194,7 @@ function abjs_preprocess_html(&$vars) {
     return;
   }
 
-  // Get all active tests that have at least one experience
+  // Get all active tests that have at least one experience.
   $test_results = db_query("SELECT DISTINCT t.tid FROM {abjs_test} AS t LEFT JOIN {abjs_test_condition} AS tc ON t.tid = tc.tid INNER JOIN {abjs_test_experience} AS te ON t.tid = te.tid WHERE t.active=1");
   $tests = $test_results->fetchAll();
 
