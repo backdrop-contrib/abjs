@@ -481,18 +481,20 @@ function abjs_test_form_save_submit($form, &$form_state) {
   // test in these tables. Using db_merge instead of db_insert in case
   // multiple of the same condition or experience were entered, in which case
   // this will collapse them to one.
-  foreach ($form_state['values']['conditions_fieldset']['conditions'] as $cid) {
-    if ($cid > 0) {
-      db_merge('abjs_test_condition')
-        ->key(array(
-          'tid' => $tid,
-          'cid' => $cid,
-        ))
-        ->fields(array(
-          'tid' => $tid,
-          'cid' => $cid,
-        ))
-        ->execute();
+  if (isset($form_state['values']['conditions_fieldset']['conditions'])) {
+    foreach ($form_state['values']['conditions_fieldset']['conditions'] as $cid) {
+      if ($cid > 0) {
+        db_merge('abjs_test_condition')
+          ->key(array(
+            'tid' => $tid,
+            'cid' => $cid,
+          ))
+          ->fields(array(
+            'tid' => $tid,
+            'cid' => $cid,
+          ))
+          ->execute();
+      }
     }
   }
   foreach ($form_state['values']['experiences_fieldset'] as $fieldset) {
