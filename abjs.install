@@ -10,18 +10,6 @@
  */
 
 /**
- * Implements hook_install().
- */
-function abjs_install() {
-  variable_set('abjs_cookie_prefix', 'abjs_');
-  variable_set('abjs_cookie_lifetime', '30');
-  variable_set('abjs_cookie_domain', '');
-  variable_set('abjs_cookie_secure', 0);
-  variable_set('abjs_ace', 1);
-}
-
-
-/**
  * Implements hook_schema().
  */
 function abjs_schema() {
@@ -253,15 +241,4 @@ function abjs_schema() {
     'primary key' => array('tcid'),
   );
   return $schema;
-}
-
-/**
- * Implements hook_uninstall().
- */
-function abjs_uninstall() {
-  variable_del('abjs_cookie_prefix');
-  variable_del('abjs_cookie_lifetime');
-  variable_del('abjs_cookie_domain');
-  variable_del('abjs_cookie_secure');
-  variable_del('abjs_ace');
 }

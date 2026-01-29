@@ -1,4 +1,5 @@
+type = module
 name = A/B Test JS
 description = A/B Test JS
-core = 7.x
+backdrop = 1.x
 configure = admin/config/user-interface/abjs/settings

@@ -11,43 +11,45 @@
 function abjs_settings_admin($form, &$form_state) {
   // Each applicable test will have one cookie. The cookie prefix will prefix
   // the name of all test cookies.
-  $form['abjs_cookie_prefix'] = array(
+  $config = config('abjs.settings');
+  $form['#config'] = 'abjs.settings';
+  $form['cookie_prefix'] = array(
     '#type' => 'textfield',
     '#title' => t('Cookie Prefix'),
-    '#default_value' => variable_get('abjs_cookie_prefix'),
+    '#default_value' => $config->get('cookie_prefix'),
     '#description' => t('This string will prefix all A/B test cookie names'),
     '#size' => 10,
     '#maxlength' => 10,
   );
-  $form['abjs_cookie_lifetime'] = array(
+  $form['cookie_lifetime'] = array(
     '#type' => 'textfield',
     '#title' => t('Cookie Lifetime'),
     '#description' => t('Enter cookie lifetime in days'),
-    '#default_value' => variable_get('abjs_cookie_lifetime'),
+    '#default_value' => $config->get('cookie_lifetime'),
     '#size' => 4,
     '#maxlength' => 10,
   );
-  $form['abjs_cookie_domain'] = array(
+  $form['cookie_domain'] = array(
     '#type' => 'textfield',
     '#title' => t('Cookie Domain'),
     '#description' => t('Enter the domain to which the test cookies will be set, e.g. example.com. Leave blank to set the cookies to the domain of the page where the tests are occurring.'),
-    '#default_value' => variable_get('abjs_cookie_domain'),
+    '#default_value' => $config->get('cookie_domain'),
     '#size' => 50,
     '#maxlength' => 100,
   );
-  $form['abjs_cookie_secure'] = array(
+  $form['cookie_secure'] = array(
     '#type' => 'select',
     '#title' => t('Use Secure Cookies?'),
     '#description' => t('This sets the secure flag on A/B test cookies'),
     '#options' => array(0 => t('No'), 1 => t('Yes')),
-    '#default_value' => variable_get('abjs_cookie_secure'),
+    '#default_value' => $config->get('cookie_secure'),
   );
-  $form['abjs_ace'] = array(
+  $form['ace'] = array(
     '#type' => 'select',
     '#title' => t('Use Ace Code Editor?'),
-    '#description' => t('Use Ace Code Editor for entering Condition and Experience scripts. If chosen, it will be loaded via https://cdnjs.cloudflare.com.'),
+    '#description' => t('Use Ace Code Editor for entering Condition and Experience scripts. If chosen, it will be loaded via jsdelivr.net.'),
     '#options' => array(0 => t('No'), 1 => t('Yes')),
-    '#default_value' => variable_get('abjs_ace'),
+    '#default_value' => $config->get('ace'),
   );
   return system_settings_form($form);
 }
@@ -108,7 +110,17 @@ function abjs_test_admin() {
       theme('username', array('account' => $user_changed)),
     );
   }
-  return l(t('Add new test'), '/admin/config/user-interface/abjs/tests/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
+  $button = l(t('Add new test'), '/admin/config/user-interface/abjs/tests/add/', [
+    'attributes' => [
+      'class' => [
+        'button',
+        'button-action',
+        'button-primary',
+        'button-small',
+      ],
+    ],
+  ]);
+  return $button . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 
@@ -127,7 +139,7 @@ function abjs_test_form($form, &$form_state, $tid = NULL) {
     // Retrieve the test to prefill the edit form.
     $test_result = db_query('SELECT name, active FROM {abjs_test} WHERE tid = :tid', array(':tid' => $tid));
     if (empty($test_result)) {
-      drupal_set_message(t('The requested test does not exist.'), 'error');
+      backdrop_set_message(t('The requested test does not exist.'), 'error');
       return $form;
     }
     $test = $test_result->fetchObject();
@@ -513,7 +525,7 @@ function abjs_test_form_save_submit($form, &$form_state) {
     }
   }
   $msg = !empty($form_state['values']['tid']) ? t("Successfully updated test") : t("Successfully saved new test");
-  drupal_set_message($msg);
+  backdrop_set_message($msg);
   $form_state['redirect'] = array('/admin/config/user-interface/abjs/tests');
 }
 
@@ -567,7 +579,7 @@ function abjs_test_delete_confirm_form_submit($form, &$form_state) {
       ->condition('tid', $form_state['values']['tid'])
       ->execute();
 
-    drupal_set_message(t('Test "%name" has been deleted.', array('%name' => $form_state['values']['name'])));
+    backdrop_set_message(t('Test "%name" has been deleted.', array('%name' => $form_state['values']['name'])));
   }
 
   $form_state['redirect'] = 'admin/config/user-interface/abjs/tests';
@@ -602,7 +614,17 @@ function abjs_condition_admin() {
       theme('username', array('account' => $user_changed)),
     );
   }
-  return l(t('Add new condition'), '/admin/config/user-interface/abjs/conditions/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
+  $button = l(t('Add new condition'), '/admin/config/user-interface/abjs/conditions/add/', [
+    'attributes' => [
+      'class' => [
+        'button',
+        'button-action',
+        'button-primary',
+        'button-small',
+      ],
+    ],
+  ]);
+  return $button . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 /**
@@ -614,12 +636,13 @@ function abjs_condition_admin() {
  */
 function abjs_condition_form($form, &$form_state, $cid = NULL) {
   $form = array();
+  $config = config('abjs.settings');
   $condition_name_default = "";
   $condition_script_default = "";
   if (!empty($cid)) {
     $condition_result = db_query('SELECT name, script FROM {abjs_condition} WHERE cid = :cid', array(':cid' => $cid));
     if (empty($condition_result)) {
-      drupal_set_message(t('The requested condition does not exist.'), 'error');
+      backdrop_set_message(t('The requested condition does not exist.'), 'error');
       return $form;
     }
     $condition = $condition_result->fetchObject();
@@ -668,13 +691,9 @@ function abjs_condition_form($form, &$form_state, $cid = NULL) {
   }
 
   // Add ace code editor for syntax highlighting on the script field.
-  if (variable_get('abjs_ace') == 1) {
-    drupal_add_js('https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js', array(
-      'type' => 'external',
-      'scope' => 'header',
-      'group' => JS_LIBRARY,
-    ));
-    drupal_add_js(drupal_get_path('module', 'abjs') . '/js/abjs-ace-edit.js');
+  if ($config->get('ace') == 1) {
+    // $form['#attached']['library'][] = ['abjs', 'ace'];
+    backdrop_add_library('abjs', 'ace');
   }
 
   return $form;
@@ -696,7 +715,7 @@ function abjs_condition_form_save_submit($form, &$form_state) {
       ))
       ->condition('cid', $form_state['values']['cid'], '=')
       ->execute();
-    drupal_set_message(t("Successfully updated condition"));
+    backdrop_set_message(t("Successfully updated condition"));
 
   }
   else {
@@ -710,7 +729,7 @@ function abjs_condition_form_save_submit($form, &$form_state) {
         'changed' => REQUEST_TIME,
         'changed_by' => $user->uid,
       ))->execute();
-    drupal_set_message(t("Successfully saved new condition"));
+    backdrop_set_message(t("Successfully saved new condition"));
 
   }
   $form_state['redirect'] = array('/admin/config/user-interface/abjs/conditions');
@@ -763,7 +782,7 @@ function abjs_condition_delete_confirm_form_submit($form, &$form_state) {
       ->condition('cid', $form_state['values']['cid'])
       ->execute();
 
-    drupal_set_message(t('Condition "%name" has been deleted.', array('%name' => $form_state['values']['name'])));
+    backdrop_set_message(t('Condition "%name" has been deleted.', array('%name' => $form_state['values']['name'])));
   }
 
   $form_state['redirect'] = 'admin/config/user-interface/abjs/conditions';
@@ -798,7 +817,17 @@ function abjs_experience_admin() {
       theme('username', array('account' => $user_changed)),
     );
   }
-  return l(t('Add new experience'), '/admin/config/user-interface/abjs/experiences/add/') . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
+  $button = l(t('Add new experience'), '/admin/config/user-interface/abjs/experiences/add/', [
+    'attributes' => [
+      'class' => [
+        'button',
+        'button-action',
+        'button-primary',
+        'button-small',
+      ],
+    ],
+  ]);
+  return $button . '<br><br>' . theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 /**
@@ -809,13 +838,14 @@ function abjs_experience_admin() {
  * determining if this is an add form or edit form.
  */
 function abjs_experience_form($form, &$form_state, $eid = NULL) {
+  $config = config('abjs.settings');
   $form = array();
   $experience_name_default = "";
   $experience_script_default = "";
   if (!empty($eid)) {
     $experience_result = db_query('SELECT name, script FROM {abjs_experience} WHERE eid = :eid', array(':eid' => $eid));
     if (empty($experience_result)) {
-      drupal_set_message(t('The requested experience does not exist.'), 'error');
+      backdrop_set_message(t('The requested experience does not exist.'), 'error');
       return $form;
     }
     $experience = $experience_result->fetchObject();
@@ -865,17 +895,8 @@ function abjs_experience_form($form, &$form_state, $eid = NULL) {
   }
 
   // Add ace code editor for syntax highlighting on the script field.
-  if (variable_get('abjs_ace') == 1) {
-    drupal_add_js('https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js', array(
-      'type' => 'external',
-      'scope' => 'header',
-      'group' => JS_LIBRARY,
-    ));
-    drupal_add_js(drupal_get_path('module', 'abjs') . '/js/abjs-ace-edit.js', array(
-      'type' => 'file',
-      'scope' => 'footer',
-      'group' => JS_THEME,
-    ));
+  if ($config->get('ace') == 1) {
+    $form['#attached']['library'][] = ['abjs', 'ace'];
   }
   return $form;
 }
@@ -896,7 +917,7 @@ function abjs_experience_form_save_submit($form, &$form_state) {
       ))
       ->condition('eid', $form_state['values']['eid'], '=')
       ->execute();
-    drupal_set_message(t("Successfully updated experience"));
+    backdrop_set_message(t("Successfully updated experience"));
   }
   else {
     // This is a new experience, so use insert.
@@ -910,7 +931,7 @@ function abjs_experience_form_save_submit($form, &$form_state) {
         'changed_by' => $user->uid,
       ))
       ->execute();
-    drupal_set_message(t("Successfully saved new experience"));
+    backdrop_set_message(t("Successfully saved new experience"));
   }
   $form_state['redirect'] = array('/admin/config/user-interface/abjs/experiences');
 }
@@ -962,7 +983,7 @@ function abjs_experience_delete_confirm_form_submit($form, &$form_state) {
       ->condition('eid', $form_state['values']['eid'])
       ->execute();
 
-    drupal_set_message(t('Experience "%name" has been deleted.', array('%name' => $form_state['values']['name'])));
+    backdrop_set_message(t('Experience "%name" has been deleted.', array('%name' => $form_state['values']['name'])));
   }
 
   $form_state['redirect'] = 'admin/config/user-interface/abjs/experiences';
