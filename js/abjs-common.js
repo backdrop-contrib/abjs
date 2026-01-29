@@ -19,7 +19,7 @@ var abCookies = {
   setCookie: function (sKey, sValue) {
     'use strict';
     var abKey = abjs.cookiePrefix + sKey;
-    document.cookie = encodeURIComponent(abKey) + '=' + encodeURIComponent(sValue) + '; max-age=' + abjs.cookieLifetime * 24 * 60 * 60 + abjs.cookieDomain + '; path=/' + abjs.cookieSecure;
+    document.cookie = encodeURIComponent(abKey) + '=' + encodeURIComponent(sValue) + abjs.cookieLifetime + abjs.cookieDomain + '; path=/' + abjs.cookieSecure;
     return true;
   }
 };

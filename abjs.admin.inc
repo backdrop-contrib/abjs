@@ -22,10 +22,12 @@ function abjs_settings_admin($form, &$form_state) {
     '#maxlength' => 10,
   );
   $form['cookie_lifetime'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Cookie Lifetime'),
-    '#description' => t('Enter cookie lifetime in days'),
-    '#default_value' => $config->get('cookie_lifetime'),
+    '#description' => t('Enter cookie lifetime in days. Entering a value of 0 will cause the cookie to be valid only for the current session.'),
+    '#default_value' => $config->get('cookie_lifetime') ?? 0,
+    '#min' => 0,
+    '#step' => 1,
     '#size' => 4,
     '#maxlength' => 10,
   );
@@ -33,7 +35,7 @@ function abjs_settings_admin($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Cookie Domain'),
     '#description' => t('Enter the domain to which the test cookies will be set, e.g. example.com. Leave blank to set the cookies to the domain of the page where the tests are occurring.'),
-    '#default_value' => $config->get('cookie_domain'),
+    '#default_value' => $config->get('cookie_domain') ?? '',
     '#size' => 50,
     '#maxlength' => 100,
   );
@@ -42,14 +44,14 @@ function abjs_settings_admin($form, &$form_state) {
     '#title' => t('Use Secure Cookies?'),
     '#description' => t('This sets the secure flag on A/B test cookies'),
     '#options' => array(0 => t('No'), 1 => t('Yes')),
-    '#default_value' => $config->get('cookie_secure'),
+    '#default_value' => $config->get('cookie_secure') ?? 0,
   );
   $form['ace'] = array(
     '#type' => 'select',
     '#title' => t('Use Ace Code Editor?'),
     '#description' => t('Use Ace Code Editor for entering Condition and Experience scripts. If chosen, it will be loaded via jsdelivr.net.'),
     '#options' => array(0 => t('No'), 1 => t('Yes')),
-    '#default_value' => $config->get('ace'),
+    '#default_value' => $config->get('ace') ?? 0,
   );
   return system_settings_form($form);
 }

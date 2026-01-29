@@ -1,6 +1,6 @@
 {
   "cookie_prefix": "abjs_",
-  "cookie_lifetime": "30",
+  "cookie_lifetime": 0,
   "cookie_domain": "",
   "cookie_secure": 0,
   "ace": 1
