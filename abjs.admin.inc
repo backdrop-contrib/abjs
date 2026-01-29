@@ -22,10 +22,12 @@ function abjs_settings_admin($form, &$form_state) {
     '#maxlength' => 10,
   );
   $form['cookie_lifetime'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Cookie Lifetime'),
-    '#description' => t('Enter cookie lifetime in days'),
-    '#default_value' => $config->get('cookie_lifetime'),
+    '#description' => t('Enter cookie lifetime in days. Entering a value of 0 will cause the cookie to be valid only for the current session.'),
+    '#default_value' => $config->get('cookie_lifetime') ?? 0,
+    '#min' => 0,
+    '#step' => 1,
     '#size' => 4,
     '#maxlength' => 10,
   );

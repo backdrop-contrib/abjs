@@ -331,8 +331,7 @@ function abjs_generate_js(array $tests) {
   $cookie_domain = $config->get('cookie_domain');
   $cookie_secure = $config->get('cookie_secure');
   $cookie_prefix = $cookie_prefix ?? 'abjs_';
-  $cookie_lifetime = $cookie_lifetime ?? '30';
-  $cookie_lifetime = floatval($cookie_lifetime);
+  $cookie_lifetime = !empty($cookie_lifetime) ? '; max-age=' . $cookie_lifetime * 24 * 60 * 60 : '';
   $cookie_domain = !empty($cookie_domain) ? '; domain=' . $cookie_domain : '';
   $cookie_secure = !empty($cookie_secure) ? '; secure' : '';
 
